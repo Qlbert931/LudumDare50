@@ -8,7 +8,8 @@
 #define SPRITE_H
 
 #include "raylib.h"
-#include <string>
+#include "context.h"
+#include "component.h"
 
 enum SpriteName {
 	None = 0,
@@ -17,29 +18,20 @@ enum SpriteName {
     Golem = 3
 };
 
-class Sprite {
+ class Sprite : public Component {
 public:
-    Sprite();
+    Sprite(SpriteName spriteName, Color spriteColor);
+    ~Sprite();
 
-	SpriteName name;
+    int Width(Context& ctx) override;
+    int Height(Context& ctx) override;
+//    void Update(Context& ctx) override;
+
+    SpriteName name;
     Color color;
 
-    int posX, posY;
-private:
-
+ protected:
+     void Draw(Context &ctx) override;
 };
-
-Sprite::Sprite() {
-	name = None;
-    color = WHITE;
-    posX = 0;
-    posY = 0;
-}
-
-// Create sprite given a name type and the color for tinting
-Sprite& initializeSprite(SpriteName spriteName, Color spriteColor);
-
-// Prints the sprite onto a given location
-void printSprite(Sprite sprite);
 
 #endif //SPRITE_H
