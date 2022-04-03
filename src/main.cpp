@@ -6,7 +6,6 @@
 
 #include "context.h"
 #include "gui/system.h"
-#include "iostream"
 
 int main(void) {
 	Context ctx = Context();
@@ -17,16 +16,11 @@ int main(void) {
 
 	ctx.Initialize();
 
-	VerticalPanel testMenu = VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
-	Sprite sprite = Sprite(ctx, SpriteName::Golem, {.WidthScale = .5, .HeightScale = .5, .DefaultColor = Color{255, 150, 200, 255}});
-	testMenu += &sprite;
-
 	while (!WindowShouldClose()) {
 		ctx.Update();
 		BeginDrawing();
 		ClearBackground(ctx.Colors.Background);
-		//ctx.Draw();
-		testMenu.DrawComponent(ctx, 0, 0);
+		ctx.Draw();
 		EndDrawing();
 	}
 

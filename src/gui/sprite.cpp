@@ -30,11 +30,13 @@ void Sprite::Draw(Context &ctx) {
 		unload();
 		load(ctx);
 	}
+	int halfWidth = Width(ctx) / 2;
+	int halfHeight = Height(ctx) / 2;
 	if (colorTex != nullptr) {
-		DrawTexture(*colorTex, X(), Y(), WHITE);
+		DrawTexture(*colorTex, X() + halfWidth - (colorTex->width / 2), Y() + halfHeight - (colorTex->height / 2), WHITE);
 	}
 	if (grayTex != nullptr) {
-		DrawTexture(*grayTex, X(), Y(), options.DefaultColor);
+		DrawTexture(*grayTex, X() + halfWidth - (grayTex->width / 2), Y() + halfHeight - (grayTex->height / 2), options.DefaultColor);
 	}
 }
 
