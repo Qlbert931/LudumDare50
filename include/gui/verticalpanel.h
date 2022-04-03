@@ -13,7 +13,7 @@
 class VerticalPanel : public Component {
 public:
 	VerticalPanel(Context& ctx, const Component::Options& options);
-	~VerticalPanel();
+	~VerticalPanel() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
 	void Update(Context& ctx) override;

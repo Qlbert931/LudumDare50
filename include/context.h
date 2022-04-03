@@ -7,8 +7,10 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 #include "raylib/raylib.h"
+#include "vector"
 
 class Context;
+class Component;
 
 struct Colors_ {
 	Color Background = Color{30, 30, 30, 255};
@@ -44,12 +46,33 @@ private:
 
 class Context {
 public:
+	struct Menus {
+		friend class Context;
+
+	public:
+		enum Index {
+			None = -1,
+			MainMenu = 0,
+		};
+		void Set(Index menuIndex) { currentMenu = menuIndex; }
+		Index Current() { return currentMenu; }
+		Component& operator [](Index idx) { return *(menus.at(idx)); }
+
+	private:
+		Index currentMenu = None;
+		std::vector<Component*> menus;
+		void initialize(Context& ctx);
+	};
+
 	Context();
-	~Context() = default;
+	~Context();
+	void Initialize();
 	void Update();
+	void Draw();
 	const Colors_ Colors;
 	Screen_ Screen;
 	Mouse_ Mouse;
+	Menus Menu;
 };
 
 #endif //CONTEXT_H

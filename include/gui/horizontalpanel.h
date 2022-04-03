@@ -13,7 +13,7 @@
 class HorizontalPanel : public Component {
 public:
 	HorizontalPanel(Context& ctx, const Component::Options& options);
-	~HorizontalPanel();
+	~HorizontalPanel() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
 	void Update(Context& ctx) override;
