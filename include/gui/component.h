@@ -15,16 +15,19 @@ class Component {
 	friend class Button;
 
 public:
-	virtual ~Component() {}
+	virtual ~Component();
 	virtual int Width(Context& ctx) = 0;
 	virtual int Height(Context& ctx) = 0;
 	virtual void Update(Context& ctx);
+	Component* AddChild(Component* child);
 	void DrawComponent(Context& ctx, int x, int y);
 	bool IsMouseOver(Context& ctx);
 	bool IsMouseDown(Context& ctx);
 	void OnClick(Context& ctx) const;
 	int X() { return x; }
 	int Y() { return y; }
+	void operator +=(Component* component);
+	Component& operator [](int i) { return *(children->at(i)); }
 
 	struct Options {
 	public:
@@ -45,8 +48,10 @@ public:
 	};
 
 protected:
+	Component() { children = new std::vector<Component*>(); }
 	virtual void Draw(Context& ctx) = 0;
 	Component* parent = nullptr;
+	std::vector<Component*>* children;
 	Options options;
 
 private:

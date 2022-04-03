@@ -12,17 +12,12 @@
 
 class Button : public Component {
 public:
-	Button(Context& ctx, const Component::Options& options, Component* child);
-	~Button() override;
+	Button(Context& ctx, const Component::Options& options);
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
-	void Update(Context& ctx) override;
 
 protected:
 	void Draw(Context& ctx) override;
-
-private:
-	Component* child;
 };
 
 #endif //BUTTON_H

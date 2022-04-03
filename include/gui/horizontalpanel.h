@@ -13,19 +13,11 @@
 class HorizontalPanel : public Component {
 public:
 	HorizontalPanel(Context& ctx, const Component::Options& options);
-	~HorizontalPanel() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
-	void Update(Context& ctx) override;
-	void AddChild(Component* child);
-	void operator +=(Component* component);
-	Component& operator [](int i) { return *(children->at(i)); }
 
 protected:
 	void Draw(Context& ctx) override;
-
-private:
-	std::vector<Component*>* children;
 };
 
 #endif //HORIZONTALPANEL_H

@@ -14,7 +14,6 @@ class SliderTab;
 class Slider : public Component {
 public:
 	Slider(Context& ctx, const Component::Options& options, Color trackColor, float* trackedValue);
-	~Slider() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
 	void Update(Context& ctx) override;
@@ -25,14 +24,12 @@ protected:
 private:
 	Color trackColor;
 	float* trackedValue;
-	SliderTab* tab;
 };
 
 class SliderTab : public Component {
 	friend class Slider;
 
 public:
-	~SliderTab() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
 

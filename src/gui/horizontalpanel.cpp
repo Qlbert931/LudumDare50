@@ -11,13 +11,6 @@ HorizontalPanel::HorizontalPanel(Context& ctx, const Component::Options& options
 	this->children = new std::vector<Component*>();
 }
 
-HorizontalPanel::~HorizontalPanel() {
-	for (Component* child : *children) {
-		delete(child);
-	}
-	delete(this->children);
-}
-
 int HorizontalPanel::Height(Context& ctx) {
 	if (parent == nullptr) {
 		return ctx.Screen.Height();
@@ -30,13 +23,6 @@ int HorizontalPanel::Width(Context& ctx) {
 		return ctx.Screen.Width();
 	}
 	return (int)((float)parent->Width(ctx) * options.WidthScale);
-}
-
-void HorizontalPanel::Update(Context& ctx) {
-	Component::Update(ctx);
-	for (auto& component: *children) {
-		component->Update(ctx);
-	}
 }
 
 void HorizontalPanel::Draw(Context& ctx) {
@@ -59,13 +45,4 @@ void HorizontalPanel::Draw(Context& ctx) {
 		child->DrawComponent(ctx, nextChildX, Y() + (halfHeight - (child->Height(ctx) / 2)));
 		nextChildX += child->Width(ctx);
 	}
-}
-
-void HorizontalPanel::AddChild(Component* child) {
-	child->parent = this;
-	children->push_back(child);
-}
-
-void HorizontalPanel::operator+=(Component* component) {
-	AddChild(component);
 }

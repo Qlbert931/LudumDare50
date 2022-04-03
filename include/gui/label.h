@@ -13,7 +13,6 @@
 class Label : public Component {
 public:
 	Label(Context& ctx, std::string text, const Component::Options& options);
-	~Label() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
 

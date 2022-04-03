@@ -6,6 +6,13 @@
 
 #include "gui/component.h"
 
+Component::~Component() {
+	for (Component* child : *children) {
+		delete(child);
+	}
+	delete(this->children);
+}
+
 bool Component::IsMouseOver(Context& ctx) {
 	int right = x + Width(ctx);
 	int bottom = y + Height(ctx);
@@ -40,6 +47,19 @@ void Component::Update(Context& ctx) {
 	if (ctx.Mouse.HasClicked() && IsMouseOver(ctx)) {
 		OnClick(ctx);
 	}
+	for (auto child : *children) {
+		child->Update(ctx);
+	}
+}
+
+Component* Component::AddChild(Component* child) {
+	child->parent = this;
+	children->push_back(child);
+	return this;
+}
+
+void Component::operator+=(Component* component) {
+	AddChild(component);
 }
 
 Component::Options Component::Options::copy() {
