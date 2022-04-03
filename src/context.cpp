@@ -5,11 +5,22 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #include "context.h"
+#include "gui/menus.h"
 #include "cmath"
 
 Context::Context() {
 	Screen.width = 1280;
 	Screen.height = 720;
+}
+
+Context::~Context() {
+	for (auto menu : Menu.menus) {
+		delete(menu);
+	}
+}
+
+void Context::Initialize() {
+	this->Menu.initialize(*this);
 }
 
 void Context::Update() {
@@ -30,4 +41,20 @@ void Context::Update() {
 	} else {
 		Mouse.clicked = false;
 	}
+
+	if (Menu.currentMenu >= 0) {
+		Menu.menus.at(Menu.currentMenu)->Update(*this);
+	}
+}
+
+void Context::Draw() {
+	if (Menu.currentMenu >= 0) {
+		Menu.menus.at(Menu.currentMenu)->DrawComponent(*this, 0, 0);
+	}
+}
+
+void Context::Menus::initialize(Context& ctx) {
+	// ENSURE that the menu order here matches the Menu::Index enumerated order
+	menus.push_back(Menu::CreateMainMenu(ctx));
+	currentMenu = Menus::MainMenu;
 }

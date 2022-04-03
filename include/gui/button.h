@@ -13,7 +13,7 @@
 class Button : public Component {
 public:
 	Button(Context& ctx, const Component::Options& options, Label* label);
-	~Button();
+	~Button() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
 	void Update(Context& ctx) override;

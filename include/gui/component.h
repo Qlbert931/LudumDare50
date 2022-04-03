@@ -15,6 +15,7 @@ class Component {
 	friend class Button;
 
 public:
+	virtual ~Component() {}
 	virtual int Width(Context& ctx) = 0;
 	virtual int Height(Context& ctx) = 0;
 	virtual void Update(Context& ctx);
