@@ -6,6 +6,8 @@
 
 #include "gui/component.h"
 
+#include <utility>
+
 Component::~Component() {
 	for (Component* child : *children) {
 		delete(child);
@@ -31,9 +33,9 @@ bool Component::IsMouseDown(Context& ctx) {
 	return false;
 }
 
-void Component::OnClick(Context& ctx) const {
+void Component::OnClick(Context& ctx) {
 	if (options.OnClick != nullptr) {
-		options.OnClick(ctx);
+		options.OnClick(ctx, *this);
 	}
 }
 
@@ -96,8 +98,8 @@ Component::Options Component::Options::WithHoverColor(Color hoverColor) {
 	return newOptions;
 }
 
-Component::Options Component::Options::WithOnClick(std::function<void(Context&)> onClick) {
+Component::Options Component::Options::WithOnClick(std::function<void(Context&, Component&)> onClick) {
 	auto newOptions = copy();
-	newOptions.OnClick = onClick;
+	newOptions.OnClick = std::move(onClick);
 	return newOptions;
 }

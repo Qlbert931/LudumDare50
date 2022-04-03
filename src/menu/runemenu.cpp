@@ -44,12 +44,12 @@ VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
 		.HeightScale = 1.0,
 		.DefaultColor = Color{130, 130, 130, 255},
 		.HoverColor = Color{150, 150, 150, 255}};
-	auto electricClickFunc = [](Context& ctx) { std::cout << "[ELECTRIC RUNE] Clicked!" << std::endl; };
-	auto fireClickFunc = [](Context& ctx) { std::cout << "[FIRE RUNE] Clicked!" << std::endl; };
-	auto noneClickFunc = [](Context& ctx) { std::cout << "[NONE RUNE] Clicked!" << std::endl; };
-	auto pureClickFunc = [](Context& ctx) { std::cout << "[PURE RUNE] Clicked!" << std::endl; };
-	auto waterClickFunc = [](Context& ctx) { std::cout << "[WATER RUNE] Clicked!" << std::endl; };
-	auto windClickFunc = [](Context& ctx) { std::cout << "[WIND RUNE] Clicked!" << std::endl; };
+	auto electricClickFunc = [](Context& ctx, Component& component) { std::cout << "[ELECTRIC RUNE] Clicked!" << std::endl; };
+	auto fireClickFunc = [](Context& ctx, Component& component) { std::cout << "[FIRE RUNE] Clicked!" << std::endl; };
+	auto noneClickFunc = [](Context& ctx, Component& component) { std::cout << "[NONE RUNE] Clicked!" << std::endl; };
+	auto pureClickFunc = [](Context& ctx, Component& component) { std::cout << "[PURE RUNE] Clicked!" << std::endl; };
+	auto waterClickFunc = [](Context& ctx, Component& component) { std::cout << "[WATER RUNE] Clicked!" << std::endl; };
+	auto windClickFunc = [](Context& ctx, Component& component) { std::cout << "[WIND RUNE] Clicked!" << std::endl; };
 
 	auto electricButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(electricClickFunc));
 	*electricButton += new Sprite(ctx, SpriteName::ElectricRune, {.WidthScale = .25, .HeightScale = .45});

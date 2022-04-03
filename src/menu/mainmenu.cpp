@@ -26,9 +26,9 @@ VerticalPanel* Menu::CreateMainMenu(Context& ctx) {
 		.HeightScale = 0.15,
 		.DefaultColor = Color{130, 130, 130, 255},
 		.HoverColor = Color{150, 150, 150, 255}};
-	auto playClickFunc = [](Context& ctx) { std::cout << "[PLAY] Clicked!" << std::endl; };
-	auto leaderboardClickFunc = [](Context& ctx) { std::cout << "[LEADERBOARDS] Clicked!" << std::endl; };
-	auto playerClickFunc = [](Context& ctx) { std::cout << "[PLAYER] Clicked!" << std::endl; };
+	auto playClickFunc = [](Context& ctx, Component& component) { std::cout << "[PLAY] Clicked!" << std::endl; };
+	auto leaderboardClickFunc = [](Context& ctx, Component& component) { std::cout << "[LEADERBOARDS] Clicked!" << std::endl; };
+	auto playerClickFunc = [](Context& ctx, Component& component) { std::cout << "[PLAYER] Clicked!" << std::endl; };
 
 	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(playClickFunc)))->AddChild(new Label(ctx, "PLAY", menuButtonLabelOptions));
 	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(leaderboardClickFunc)))->AddChild(new Label(ctx, "LEADERBOARDS", menuButtonLabelOptions));
