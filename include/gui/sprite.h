@@ -12,26 +12,41 @@
 #include "component.h"
 
 enum SpriteName {
-	None = 0,
-    SpearGoblin = 1,
-    BearBaby = 2,
-    Golem = 3
+	// Enemies
+	SpearGoblin,
+	BearBaby,
+	Golem,
+
+	// Runes
+	NoneRune,
+	FireRune,
+	ElectricRune,
+	WaterRune,
+	WindRune,
+	PureRune,
+	OmniRune,
+
+	// Icons
+	Backpack,
 };
 
- class Sprite : public Component {
+class Sprite : public Component {
 public:
-    Sprite(SpriteName spriteName, Color spriteColor);
-    ~Sprite();
+	Sprite(Context& ctx, SpriteName spriteName, const Component::Options& options);
+	~Sprite();
+	int Width(Context& ctx) override;
+	int Height(Context& ctx) override;
 
-    int Width(Context& ctx) override;
-    int Height(Context& ctx) override;
-//    void Update(Context& ctx) override;
+protected:
+	void Draw(Context& ctx) override;
 
-    SpriteName name;
-    Color color;
+private:
+	void load(Context& ctx);
+	void unload();
 
- protected:
-     void Draw(Context &ctx) override;
+	SpriteName name;
+	Texture2D* colorTex = nullptr;
+	Texture2D* grayTex = nullptr;
 };
 
 #endif //SPRITE_H

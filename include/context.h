@@ -38,10 +38,13 @@ struct Screen_ {
 public:
 	int Width() const { return width; };
 	int Height() const { return height; };
+	bool HasResized() const { return width != prevWidth || height != prevHeight; }
 
 private:
 	int width = 0;
 	int height = 0;
+	int prevWidth = 0;
+	int prevHeight = 0;
 };
 
 class Context {

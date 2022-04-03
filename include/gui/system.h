@@ -11,5 +11,6 @@
 #include "horizontalpanel.h"
 #include "label.h"
 #include "verticalpanel.h"
+#include "sprite.h"
 
 #endif //GUISYSTEM_H

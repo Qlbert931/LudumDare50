@@ -25,6 +25,8 @@ void Context::Initialize() {
 
 void Context::Update() {
 	// Screen
+	Screen.prevWidth = Screen.width;
+	Screen.prevHeight = Screen.height;
 	Screen.width = GetScreenWidth();
 	Screen.height = GetScreenHeight();
 
