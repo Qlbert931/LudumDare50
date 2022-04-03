@@ -7,9 +7,11 @@
 #ifndef MENUS_H
 #define MENUS_H
 #include "verticalpanel.h"
+#include "horizontalpanel.h"
 
 namespace Menu {
 	VerticalPanel* CreateMainMenu(Context& ctx);
+	VerticalPanel* CreateRuneMenu(Context& ctx);
 }
 
 #endif //MENUS_H

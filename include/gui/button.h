@@ -12,7 +12,7 @@
 
 class Button : public Component {
 public:
-	Button(Context& ctx, const Component::Options& options, Label* label);
+	Button(Context& ctx, const Component::Options& options, Component* child);
 	~Button() override;
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
@@ -22,7 +22,7 @@ protected:
 	void Draw(Context& ctx) override;
 
 private:
-	Label* label;
+	Component* child;
 };
 
 #endif //BUTTON_H

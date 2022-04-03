@@ -58,5 +58,6 @@ void Context::Draw() {
 void Context::Menus::initialize(Context& ctx) {
 	// ENSURE that the menu order here matches the Menu::Index enumerated order
 	menus.push_back(Menu::CreateMainMenu(ctx));
+	menus.push_back(Menu::CreateRuneMenu(ctx));
 	currentMenu = Menus::MainMenu;
 }

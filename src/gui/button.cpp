@@ -6,14 +6,14 @@
 
 #include "gui/button.h"
 
-Button::Button(Context& ctx, const Component::Options& options, Label* label) {
+Button::Button(Context& ctx, const Component::Options& options, Component* child) {
 	this->options = options;
-	this->label = label;
-	label->parent = this;
+	this->child = child;
+	child->parent = this;
 }
 
 Button::~Button() {
-	delete(this->label);
+	delete(this->child);
 }
 
 int Button::Height(Context& ctx) {
@@ -26,7 +26,7 @@ int Button::Width(Context& ctx) {
 
 void Button::Update(Context& ctx) {
 	Component::Update(ctx);
-	label->Update(ctx);
+	child->Update(ctx);
 }
 
 void Button::Draw(Context& ctx) {
@@ -35,5 +35,5 @@ void Button::Draw(Context& ctx) {
 		color = options.HoverColor;
 	}
 	DrawRectangle(X(), Y(), Width(ctx), Height(ctx), color);
-	label->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (label->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (label->Height(ctx) / 2)));
+	child->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (child->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (child->Height(ctx) / 2)));
 }

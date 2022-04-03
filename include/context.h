@@ -56,6 +56,7 @@ public:
 		enum Index {
 			None = -1,
 			MainMenu = 0,
+			RuneMenu = 1
 		};
 		void Set(Index menuIndex) { currentMenu = menuIndex; }
 		Index Current() { return currentMenu; }
