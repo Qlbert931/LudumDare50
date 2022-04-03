@@ -46,6 +46,7 @@ public:
 	private:
 		Options copy();
 	};
+	Options& GetOptions() { return options; }
 
 protected:
 	Component() { children = new std::vector<Component*>(); }
