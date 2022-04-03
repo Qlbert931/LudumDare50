@@ -11,13 +11,6 @@ VerticalPanel::VerticalPanel(Context& ctx, const Component::Options& options) {
 	this->children = new std::vector<Component*>();
 }
 
-VerticalPanel::~VerticalPanel() {
-	for (Component* child : *children) {
-		delete(child);
-	}
-	delete(this->children);
-}
-
 int VerticalPanel::Height(Context& ctx) {
 	if (parent == nullptr) {
 		return ctx.Screen.Height();
@@ -30,13 +23,6 @@ int VerticalPanel::Width(Context& ctx) {
 		return ctx.Screen.Width();
 	}
 	return (int)((float)parent->Width(ctx) * options.WidthScale);
-}
-
-void VerticalPanel::Update(Context& ctx) {
-	Component::Update(ctx);
-	for (auto& component: *children) {
-		component->Update(ctx);
-	}
 }
 
 void VerticalPanel::Draw(Context& ctx) {
@@ -59,13 +45,4 @@ void VerticalPanel::Draw(Context& ctx) {
 		child->DrawComponent(ctx, X() + (halfWidth - (child->Width(ctx) / 2)), nextChildY);
 		nextChildY += child->Height(ctx);
 	}
-}
-
-void VerticalPanel::AddChild(Component* child) {
-	child->parent = this;
-	children->push_back(child);
-}
-
-void VerticalPanel::operator+=(Component* component) {
-	AddChild(component);
 }

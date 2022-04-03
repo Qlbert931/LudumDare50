@@ -12,8 +12,6 @@ Label::Label(Context& ctx, std::string text, const Component::Options& options) 
 	this->textLengthAt10 = (float)MeasureText(text.c_str(), 10);
 }
 
-Label::~Label() {}
-
 int Label::Height(Context& ctx) {
 	return (int)((float)parent->Height(ctx) * options.HeightScale);
 }
@@ -39,4 +37,7 @@ void Label::Draw(Context& ctx) {
 		Y() + (Height(ctx) / 2) - (fontSize / 2),
 		fontSize,
 		color);
+	for (auto child : *children) {
+		child->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (child->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (child->Height(ctx) / 2)));
+	}
 }

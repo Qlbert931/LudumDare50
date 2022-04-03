@@ -6,14 +6,8 @@
 
 #include "gui/button.h"
 
-Button::Button(Context& ctx, const Component::Options& options, Component* child) {
+Button::Button(Context& ctx, const Component::Options& options) {
 	this->options = options;
-	this->child = child;
-	child->parent = this;
-}
-
-Button::~Button() {
-	delete(this->child);
 }
 
 int Button::Height(Context& ctx) {
@@ -24,16 +18,13 @@ int Button::Width(Context& ctx) {
 	return (int)((float)parent->Width(ctx) * options.WidthScale);
 }
 
-void Button::Update(Context& ctx) {
-	Component::Update(ctx);
-	child->Update(ctx);
-}
-
 void Button::Draw(Context& ctx) {
 	auto color = options.DefaultColor;
 	if (options.HoverColor.a > 0 && IsMouseOver(ctx)) {
 		color = options.HoverColor;
 	}
 	DrawRectangle(X(), Y(), Width(ctx), Height(ctx), color);
-	child->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (child->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (child->Height(ctx) / 2)));
+	for (auto child : *children) {
+		child->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (child->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (child->Height(ctx) / 2)));
+	}
 }

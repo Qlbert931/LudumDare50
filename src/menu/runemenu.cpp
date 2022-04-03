@@ -51,12 +51,18 @@ VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
 	auto waterClickFunc = [](Context& ctx) { std::cout << "[WATER RUNE] Clicked!" << std::endl; };
 	auto windClickFunc = [](Context& ctx) { std::cout << "[WIND RUNE] Clicked!" << std::endl; };
 
-	auto electricButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(electricClickFunc), new Sprite(ctx, SpriteName::ElectricRune, {.WidthScale = .25, .HeightScale = .45}));
-	auto fireButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(fireClickFunc), new Sprite(ctx, SpriteName::FireRune, {.WidthScale = .25, .HeightScale = .45}));
-	auto noneButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(noneClickFunc), new Sprite(ctx, SpriteName::NoneRune, {.WidthScale = .25, .HeightScale = .45}));
-	auto pureButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(pureClickFunc), new Sprite(ctx, SpriteName::PureRune, {.WidthScale = .25, .HeightScale = .45}));
-	auto waterButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(waterClickFunc), new Sprite(ctx, SpriteName::WaterRune, {.WidthScale = .25, .HeightScale = .45}));
-	auto windButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(windClickFunc), new Sprite(ctx, SpriteName::WindRune, {.WidthScale = .25, .HeightScale = .45}));
+	auto electricButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(electricClickFunc));
+	*electricButton += new Sprite(ctx, SpriteName::ElectricRune, {.WidthScale = .25, .HeightScale = .45});
+	auto fireButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(fireClickFunc));
+	*fireButton += new Sprite(ctx, SpriteName::FireRune, {.WidthScale = .25, .HeightScale = .45});
+	auto noneButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(noneClickFunc));
+	*noneButton += new Sprite(ctx, SpriteName::NoneRune, {.WidthScale = .25, .HeightScale = .45});
+	auto pureButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(pureClickFunc));
+	*pureButton += new Sprite(ctx, SpriteName::PureRune, {.WidthScale = .25, .HeightScale = .45});
+	auto waterButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(waterClickFunc));
+	*waterButton += new Sprite(ctx, SpriteName::WaterRune, {.WidthScale = .25, .HeightScale = .45});
+	auto windButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(windClickFunc));
+	*windButton += new Sprite(ctx, SpriteName::WindRune, {.WidthScale = .25, .HeightScale = .45});
 
 	*electricRuneBack += electricButton;
 	*fireRuneBack += fireButton;

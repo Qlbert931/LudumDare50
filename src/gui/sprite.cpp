@@ -38,6 +38,9 @@ void Sprite::Draw(Context &ctx) {
 	if (grayTex != nullptr) {
 		DrawTexture(*grayTex, X() + halfWidth - (grayTex->width / 2), Y() + halfHeight - (grayTex->height / 2), options.DefaultColor);
 	}
+	for (auto child : *children) {
+		child->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (child->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (child->Height(ctx) / 2)));
+	}
 }
 
 void Sprite::load(Context& ctx) {

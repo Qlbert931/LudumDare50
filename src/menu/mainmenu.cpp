@@ -30,9 +30,9 @@ VerticalPanel* Menu::CreateMainMenu(Context& ctx) {
 	auto leaderboardClickFunc = [](Context& ctx) { std::cout << "[LEADERBOARDS] Clicked!" << std::endl; };
 	auto playerClickFunc = [](Context& ctx) { std::cout << "[PLAYER] Clicked!" << std::endl; };
 
-	*buttonPanel += new Button(ctx, menuButtonOptions.WithOnClick(playClickFunc), new Label(ctx, "PLAY", menuButtonLabelOptions));
-	*buttonPanel += new Button(ctx, menuButtonOptions.WithOnClick(leaderboardClickFunc), new Label(ctx, "LEADERBOARDS", menuButtonLabelOptions));
-	*buttonPanel += new Button(ctx, menuButtonOptions.WithOnClick(playerClickFunc), new Label(ctx, "PLAYER", menuButtonLabelOptions));
-	*buttonPanel += new Button(ctx, menuButtonOptions, new Label(ctx, "VOL PLACEHOLDER", menuButtonLabelOptions));
+	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(playClickFunc)))->AddChild(new Label(ctx, "PLAY", menuButtonLabelOptions));
+	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(leaderboardClickFunc)))->AddChild(new Label(ctx, "LEADERBOARDS", menuButtonLabelOptions));
+	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(playerClickFunc)))->AddChild(new Label(ctx, "PLAYER", menuButtonLabelOptions));
+	*buttonPanel += (new Button(ctx, menuButtonOptions))->AddChild(new Label(ctx, "VOL PLACEHOLDER", menuButtonLabelOptions));
 	return mainMenu;
 }

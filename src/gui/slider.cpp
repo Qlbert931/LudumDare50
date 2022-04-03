@@ -10,12 +10,7 @@ Slider::Slider(Context& ctx, const Component::Options& options, Color trackColor
 	this->options = options;
 	this->trackColor = trackColor;
 	this->trackedValue = trackedValue;
-	this->tab = new SliderTab(ctx, options);
-	this->tab->parent = this;
-}
-
-Slider::~Slider() {
-	delete(tab);
+	AddChild(new SliderTab(ctx, options));
 }
 
 int Slider::Height(Context& ctx) {
@@ -29,6 +24,9 @@ int Slider::Width(Context& ctx) {
 void Slider::Update(Context& ctx) {
 	Component::Update(ctx);
 	//TODO: handle dragging and sliding
+	for (auto child : *children) {
+		child->Update(ctx);
+	}
 }
 
 void Slider::Draw(Context& ctx) {
@@ -48,15 +46,13 @@ void Slider::Draw(Context& ctx) {
 	int tabX = X() + (tabSize / 2) + (int)((float)moveableLength * (*trackedValue));
 	int tabY = Y() + (height / 2) - (tabSize / 2);
 	DrawRectangle(tabX, tabY, tabSize, tabSize, trackColor);
-	tab->DrawComponent(ctx, tabX + trackThickness, tabY + trackThickness);
+	for (auto child : *children) {
+		child->DrawComponent(ctx, tabX + trackThickness, tabY + trackThickness);
+	}
 }
 
 SliderTab::SliderTab(Context& ctx, const Component::Options& options) {
 	this->options = options;
-}
-
-SliderTab::~SliderTab() {
-
 }
 
 int SliderTab::Height(Context& ctx) {
@@ -85,4 +81,7 @@ void SliderTab::Draw(Context& ctx) {
 	}
 	int innerTabSize = Height(ctx);
 	DrawRectangle(X(), Y(), innerTabSize, innerTabSize, color);
+	for (auto child : *children) {
+		child->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (child->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (child->Height(ctx) / 2)));
+	}
 }
