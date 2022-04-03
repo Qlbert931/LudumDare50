@@ -15,12 +15,16 @@ int main(void) {
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
 	ctx.Initialize();
+	auto panel = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
+	float trackedValue = 0;
+	*panel += new Slider(ctx, {.WidthScale = .5, .HeightScale = .2, .DefaultColor = BLUE, .HoverColor = GREEN}, RED, &trackedValue);
 
 	while (!WindowShouldClose()) {
 		ctx.Update();
 		BeginDrawing();
 		ClearBackground(ctx.Colors.Background);
-		ctx.Draw();
+		//ctx.Draw();
+		panel->DrawComponent(ctx, 0, 0);
 		EndDrawing();
 	}
 
