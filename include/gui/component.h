@@ -23,7 +23,7 @@ public:
 	void DrawComponent(Context& ctx, int x, int y);
 	bool IsMouseOver(Context& ctx);
 	bool IsMouseDown(Context& ctx);
-	void OnClick(Context& ctx) const;
+	void OnClick(Context& ctx);
 	int X() { return x; }
 	int Y() { return y; }
 	void operator +=(Component* component);
@@ -35,13 +35,13 @@ public:
 		float HeightScale = 0;
 		Color DefaultColor = {};
 		Color HoverColor = {};
-		std::function<void(Context&)> OnClick = nullptr;
+		std::function<void(Context&, Component&)> OnClick = nullptr;
 
 		Options WithWidthScale(float widthScale);
 		Options WithHeightScale(float heightScale);
 		Options WithDefaultColor(Color defaultColor);
 		Options WithHoverColor(Color hoverColor);
-		Options WithOnClick(std::function<void(Context&)> onClick);
+		Options WithOnClick(std::function<void(Context&, Component&)> onClick);
 
 	private:
 		Options copy();
