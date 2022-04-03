@@ -4,34 +4,31 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-#include "sprite.h"
+#include "gui/sprite.h"
 #include "raylib.h"
 
-Sprite& intializeSprite(SpriteName spriteName, Color spriteColor) {
-    switch(spriteName) {
-		case SpriteName::SpearGoblin:
-            Sprite* SpearGoblin;
-            SpearGoblin->name = spriteName;
-            SpearGoblin->color = spriteColor;
-            return *SpearGoblin;
-        case SpriteName::BearBaby:
-            Sprite* BearBaby;
-            BearBaby->name = spriteName;
-            BearBaby->color = spriteColor;
-            return *BearBaby;
-        case SpriteName::Golem:
-            Sprite* Golem;
-            Golem->name = spriteName;
-            Golem->color = spriteColor;
-            return *Golem;
-    }
+Sprite::Sprite(SpriteName spriteName, Color spriteColor) {
+    this->name = spriteName;
+    this->color = spriteColor;
 }
 
-void printSprite(Sprite sprite) {
-    Image grayImage, backImage;
-	SpriteName spriteCheck = sprite.name;
+Sprite::~Sprite() {
 
-    switch(spriteCheck) {
+}
+
+int Sprite::Height(Context& ctx) {
+    return (int)((float)parent->Height(ctx) * options.HeightScale);
+}
+
+int Sprite::Width(Context& ctx) {
+    return (int)((float)parent->Width(ctx) * options.WidthScale);
+}
+
+void Sprite::Draw(Context &ctx) {
+    Image grayImage, backImage;
+
+    switch(name) {
+        case SpriteName::None:
         case SpriteName::SpearGoblin:
             grayImage = LoadImage("../Art/Enemies/SpearGoblin/GrayLayer.png");
             backImage = LoadImage("../Art/Enemies/SpearGoblin/ColorLayer.png");
@@ -56,6 +53,6 @@ void printSprite(Sprite sprite) {
     UnloadImage(backImage);
 
     // Draw the textures at the same position + tinting the gray one with the given color
-    DrawTexture(grayTexture, sprite.posX, sprite.posY, sprite.color);
-    DrawTexture(backTexture, sprite.posX, sprite.posY, WHITE);
+    DrawTexture(grayTexture, X(), Y(), color);
+    DrawTexture(backTexture, X(), Y(), WHITE);
 }
