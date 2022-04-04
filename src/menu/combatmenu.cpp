@@ -6,8 +6,10 @@
 
 #include "gui/system.h"
 #include "gui/menus.h"
+#include "state.h"
 #include "rune.h"
 #include "enemy.h"
+#include "statuseffect.h"
 
 int tempProgressBar = 190;
 int tempProgressBarCurrent = 100;
@@ -33,7 +35,20 @@ Component* Menu::CreateCombatMenu(Context& ctx) {
 
 	// Enemy Row
 	auto enemy = new Enemy(ctx, 10, false);
+	//TODO: insert spaces if there are only one/two/three enemies
+	*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
 	*enemyRow += enemy->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+	*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
+	auto statusEffectsColumn = new VerticalPanel(ctx, {.WidthScale = .05, .HeightScale = 1});
+	*enemyRow += statusEffectsColumn;
+	auto statusEffectOption = Component::Options{.WidthScale = 1, .HeightScale = .15};
+	for (StatusEffectInstance* statusEffect : ctx.GameState->CurrentBattle.StatusEffects) {
+		if (statusEffect->IsCaster(ctx, ctx.GameState->CurrentRun.PlayerCharacter) && statusEffect->IsBuff(ctx)) {
+			*statusEffectsColumn += statusEffect->StatusEffect.GetSprite(ctx, statusEffectOption);
+		} else if (statusEffect->IsTarget(ctx, ctx.GameState->CurrentRun.PlayerCharacter) && !statusEffect->IsBuff(ctx)) {
+			*statusEffectsColumn += statusEffect->StatusEffect.GetSprite(ctx, statusEffectOption);
+		}
+	}
 
 	// Experience Bar
 	auto innerHealthBar = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});

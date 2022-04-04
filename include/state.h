@@ -31,6 +31,7 @@ public:
 	struct {
 		double ProgressTime = 0;
 		double ElapsedTime = 0;
+		Player PlayerCharacter;
 	} CurrentRun;
 
 	struct {
