@@ -95,6 +95,9 @@ void Sprite::load(Context& ctx) {
 		case BackButton:
 			tempColorImg = LoadImage("../assets/icons/backbutton.png");
 			break;
+		case HomeButton:
+			tempColorImg = LoadImage("../../assets/icons/homeButton.png");
+			break;
 	}
 
 	// Scale the image based on the width/height. Use the smallest scaling factor, so that no dimension is larger than our bounds.
