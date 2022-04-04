@@ -8,7 +8,6 @@
 
 VerticalPanel::VerticalPanel(Context& ctx, const Component::Options& options) {
 	this->options = options;
-	this->children = new std::vector<Component*>();
 }
 
 int VerticalPanel::Height(Context& ctx) {

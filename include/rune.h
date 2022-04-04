@@ -42,14 +42,23 @@ namespace RuneAttribute {
 	};
 }
 
+class StatusEffect;
+
 class Rune {
 public:
-	Rune(Context& ctx);
+	Rune();
+	Rune(Context& ctx, bool forPlayer);
+	~Rune();
 	Component* GenerateComponent(Context& ctx, const Component::Options& options);
 	Color GetRarityColor(Context& ctx);
 	std::string FormatName(Context& ctx, int additionalLevels);
 	std::string FormattedName(Context& ctx);
+	std::string EffectText(Context& ctx);
 	Sprite* GetSprite(Context& ctx, const Component::Options& options);
+	double FireResistance(Context& ctx);
+	double WaterResistance(Context& ctx);
+	double ElectricResistance(Context& ctx);
+	double WindResistance(Context& ctx);
 
 	std::string Name;
 	double Level;
@@ -59,9 +68,8 @@ public:
 	RuneAttribute::AttackType AttackType;
 	RuneAttribute::Element Element;
 	double FlatDamage;
-	//Buffs[] Buffs
-	//Debuffs[] Debuffs
-	//Effect Effect
+	std::vector<StatusEffect*> Buffs;
+	std::vector<StatusEffect*> Debuffs;
 	double CritChance;
 	double CritMultiplier;
 };

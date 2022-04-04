@@ -6,9 +6,10 @@
 
 #include "gui/progressbar.h"
 
-ProgressBar::ProgressBar(Context& ctx, const Component::Options& options, float* trackedValue) {
+ProgressBar::ProgressBar(Context& ctx, const Component::Options& options, int* maxValue, int* currentValue) {
 	this->options = options;
-	this->trackedValue = trackedValue;
+	this->maxValue = maxValue;
+	this->currentValue = currentValue;
 }
 
 int ProgressBar::Height(Context& ctx) {
@@ -24,7 +25,7 @@ void ProgressBar::Draw(Context& ctx) {
 	if (options.HoverColor.a > 0 && IsMouseOver(ctx)) {
 		color = options.HoverColor;
 	}
-	DrawRectangle(X(), Y(), Width(ctx) * (*trackedValue), Height(ctx), color);
+	DrawRectangle(X(), Y(), (int)((float)Width(ctx) * ((float)*currentValue / (float)*maxValue)), Height(ctx), color);
 	for (auto child : *children) {
 		child->DrawComponent(ctx, X() + ((Width(ctx) / 2) - (child->Width(ctx) / 2)), Y() + ((Height(ctx) / 2) - (child->Height(ctx) / 2)));
 	}

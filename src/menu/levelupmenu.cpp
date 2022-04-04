@@ -16,6 +16,7 @@ int tempSpecialArmor = 10;
 int tempPhysicalAttack = 35;
 int tempSpecialAttack = 2;
 int tempSpeed = 19;
+int tempEvasion = 15;
 
 Rune* tempRune1;
 Rune* tempRune2;
@@ -45,7 +46,7 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	auto statPanel = new VerticalPanel(ctx, {.WidthScale = .5, .HeightScale = 1});
 	*statsRow += statPanel;
 
-	auto statPanelOptions = Component::Options{.WidthScale = 1, .HeightScale = .08};
+	auto statPanelOptions = Component::Options{.WidthScale = 1, .HeightScale = .0727};
 	auto statLabelOptions = Component::Options{.WidthScale = .4, .HeightScale = .6, .DefaultColor = WHITE};
 	auto statSpriteOptions = Component::Options{.WidthScale = .2, .HeightScale = 1};
 	auto statInputStepperOptions = Component::Options{.WidthScale = .25, .HeightScale = .7, .DefaultColor = ctx.Colors.InputStepper, .HoverColor = ctx.Colors.InputStepperHover};
@@ -80,6 +81,11 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	*speedStat += new Label(ctx, "Speed", statLabelOptions);
 	*speedStat += new Sprite(ctx, SpriteName::Speed, statSpriteOptions);
 	*speedStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempSpeed);
+	auto evasionStat = new HorizontalPanel(ctx, statPanelOptions);
+	*statPanel += evasionStat;
+	*evasionStat += new Label(ctx, "Evasion", statLabelOptions);
+	*evasionStat += new Sprite(ctx, SpriteName::Evasion, statSpriteOptions);
+	*evasionStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempEvasion);
 	auto fireResStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += fireResStat;
 	*fireResStat += new Label(ctx, "Fire Resistance", statLabelOptions);
@@ -102,12 +108,12 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	*windResStat += new Label(ctx, "10%", statInputStepperOptions);
 
 	// Runes Column
-	tempRune1 = new Rune(ctx);
-	tempRune2 = new Rune(ctx);
-	tempRune3 = new Rune(ctx);
-	tempRune4 = new Rune(ctx);
-	tempRune5 = new Rune(ctx);
-	tempRune6 = new Rune(ctx);
+	tempRune1 = new Rune(ctx, true);
+	tempRune2 = new Rune(ctx, true);
+	tempRune3 = new Rune(ctx, true);
+	tempRune4 = new Rune(ctx, true);
+	tempRune5 = new Rune(ctx, true);
+	tempRune6 = new Rune(ctx, true);
 	auto runePanel = new VerticalPanel(ctx, {.WidthScale = .5, .HeightScale = 1});
 	*statsRow += runePanel;
 

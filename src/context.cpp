@@ -6,9 +6,11 @@
 
 #include "context.h"
 #include "gui/menus.h"
+#include "state.h"
 #include "cmath"
 
 Context::Context() {
+	GameState = new State(*this);
 	Screen.width = 1280;
 	Screen.height = 720;
 }
@@ -17,10 +19,12 @@ Context::~Context() {
 	for (auto menu : Menu.menus) {
 		delete(menu);
 	}
+	delete(this->GameState);
 }
 
 void Context::Initialize() {
 	this->Menu.initialize(*this);
+	this->GameState->Reset();
 }
 
 void Context::Update() {

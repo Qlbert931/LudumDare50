@@ -53,20 +53,35 @@ void Sprite::load(Context& ctx) {
 	bool hasGray = false;
 
 	switch(name) {
-		case SpriteName::SpearGoblin:
+		case SpearGoblin:
 			hasGray = true;
 			tempColorImg = LoadImage("../assets/enemies/speargoblin/color.png");
 			tempGrayImg = LoadImage("../assets/enemies/speargoblin/gray.png");
 			break;
-		case SpriteName::BearBaby:
+		case BearBaby:
 			hasGray = true;
 			tempColorImg = LoadImage("../assets/enemies/babybearbaby/color.png");
 			tempGrayImg = LoadImage("../assets/enemies/babybearbaby/gray.png");
 			break;
-		case SpriteName::Golem:
+		case Golem:
 			hasGray = true;
 			tempColorImg = LoadImage("../assets/enemies/golem/color.png");
 			tempGrayImg = LoadImage("../assets/enemies/golem/gray.png");
+			break;
+		case Dragon:
+			hasGray = true;
+			tempColorImg = LoadImage("../assets/enemies/dragon/color.png");
+			tempGrayImg = LoadImage("../assets/enemies/dragon/gray.png");
+			break;
+		case Bird:
+			hasGray = true;
+			tempColorImg = LoadImage("../assets/enemies/bird/color.png");
+			tempGrayImg = LoadImage("../assets/enemies/bird/gray.png");
+			break;
+		case Snake:
+			hasGray = true;
+			tempColorImg = LoadImage("../assets/enemies/snake/color.png");
+			tempGrayImg = LoadImage("../assets/enemies/snake/gray.png");
 			break;
 		case NoneRune:
 			tempColorImg = LoadImage("../assets/runes/none.png");
@@ -136,6 +151,9 @@ void Sprite::load(Context& ctx) {
 			break;
 		case Speed:
 			tempColorImg = LoadImage("../assets/stats/speed.png");
+			break;
+		case Evasion:
+			tempColorImg = LoadImage("../assets/stats/evasion.png");
 			break;
 		case FireResistance:
 			tempColorImg = LoadImage("../assets/stats/fireresistance.png");
