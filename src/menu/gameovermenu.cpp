@@ -22,7 +22,7 @@ void claimedColor (Context& ctx, Component& component) {
 	beenClicked = false;
 }
 
-VerticalPanel* Menu::CreateGameOverMenu(Context& ctx) {
+Component* Menu::CreateGameOverMenu(Context& ctx) {
 	auto gameOverMenuButtonOptions = Component::Options{
 		.WidthScale = 1.0,
 		.HeightScale = 1.0,
@@ -42,7 +42,7 @@ VerticalPanel* Menu::CreateGameOverMenu(Context& ctx) {
 
 	auto homeButtonArea = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .2});
 	auto homeButton = new Button(ctx, gameOverMenuButtonOptions.WithOnClick(claimedColor).WithWidthScale(.1));
-	*homeButtonArea += homeButton->AddChild(new Sprite(ctx, SpriteName::HomeButton, {.WidthScale = 1, .HeightScale = 1}));
+	*homeButtonArea += homeButton->AddChild(new Sprite(ctx, SpriteName::Home, {.WidthScale = 1, .HeightScale = 1}));
 
 	return gameOverMenu;
 }

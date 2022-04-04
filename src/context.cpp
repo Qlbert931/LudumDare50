@@ -60,5 +60,9 @@ void Context::Menus::initialize(Context& ctx) {
 	menus.push_back(Menu::CreateMainMenu(ctx));
 	menus.push_back(Menu::CreateRuneMenu(ctx));
 	menus.push_back(Menu::CreateGameOverMenu(ctx));
+	menus.push_back(Menu::CreateCombatMenu(ctx));
+	menus.push_back(Menu::CreateNewRuneMenu(ctx));
+	menus.push_back(Menu::CreateLevelUpMenu(ctx));
+	menus.push_back(Menu::CreatePauseMenu(ctx));
 	currentMenu = Menus::MainMenu;
 }

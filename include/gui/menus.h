@@ -10,9 +10,13 @@
 #include "horizontalpanel.h"
 
 namespace Menu {
-	VerticalPanel* CreateMainMenu(Context& ctx);
-	VerticalPanel* CreateRuneMenu(Context& ctx);
-	VerticalPanel* CreateGameOverMenu(Context& ctx);
+	Component* CreateMainMenu(Context& ctx);
+	Component* CreateRuneMenu(Context& ctx);
+	Component* CreateGameOverMenu(Context& ctx);
+	Component* CreateCombatMenu(Context& ctx);
+	Component* CreateNewRuneMenu(Context& ctx);
+	Component* CreateLevelUpMenu(Context& ctx);
+	Component* CreatePauseMenu(Context& ctx);
 }
 
 #endif //MENUS_H
