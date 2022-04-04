@@ -61,11 +61,6 @@ Component* Menu::CreateRuneMenu(Context& ctx) {
 	auto waterRuneBack = new HorizontalPanel(ctx, {.WidthScale = .15, .HeightScale = .8});
 	auto windRuneBack = new HorizontalPanel(ctx, {.WidthScale = .15, .HeightScale = .8});
 
-	auto runeMenuButtonLabelOptions = Component::Options{
-		.WidthScale = .7,
-		.HeightScale = .7,
-		.DefaultColor = Color{200, 200, 200, 255}
-	};
 	*runeTitle += new Label(ctx, "Runes", {.WidthScale = 0.95, .HeightScale = 0.5, .DefaultColor = RAYWHITE});
 
 	auto electricButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor));
