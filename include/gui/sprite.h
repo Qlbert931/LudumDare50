@@ -28,6 +28,7 @@ enum SpriteName {
 
 	// Icons
 	Backpack,
+	BackButton
 };
 
 class Sprite : public Component {

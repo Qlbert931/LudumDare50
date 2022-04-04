@@ -6,12 +6,43 @@
 
 #include "gui/system.h"
 #include "gui/menus.h"
-#include "iostream"
+#include <iostream>
+
+// Temp variable to check for clicked
+bool clicked = false;
+
+void claimColor (Context& ctx, Component& component) {
+	std::cout << "Clicked!" << std::endl;
+	if (!clicked) {
+		component.GetOptions().DefaultColor = Color{150, 150, 150, 255};
+		clicked = true;
+		return;
+	}
+	component.GetOptions().DefaultColor = Color{130, 130, 130, 255};
+	clicked = false;
+}
 
 VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
+
+	auto runeMenuButtonOptions = Component::Options{
+		.WidthScale = 1.0,
+		.HeightScale = 1.0,
+		.DefaultColor = Color{130, 130, 130, 255},
+		.HoverColor = Color{150, 150, 150, 255}
+	};
+
 	auto runeMenu = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 
-	auto runeTitle = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = .3});
+	auto backButtonArea = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .1});
+	*runeMenu += backButtonArea;
+
+	auto backButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor).WithWidthScale(.1));
+	*backButtonArea += backButton->AddChild(new Sprite(ctx, SpriteName::BackButton, {.WidthScale = 1, .HeightScale = 1}));
+
+	auto fillBackButtonArea = new VerticalPanel(ctx, {.WidthScale = .9, .HeightScale = 1});
+	*backButtonArea += fillBackButtonArea;
+
+	auto runeTitle = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = .2});
 	*runeMenu += runeTitle;
 
 	auto runeContainer = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = .7});
@@ -30,8 +61,6 @@ VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
 	auto waterRuneBack = new HorizontalPanel(ctx, {.WidthScale = .15, .HeightScale = .8});
 	auto windRuneBack = new HorizontalPanel(ctx, {.WidthScale = .15, .HeightScale = .8});
 
-
-
 	auto runeMenuButtonLabelOptions = Component::Options{
 		.WidthScale = .7,
 		.HeightScale = .7,
@@ -39,29 +68,22 @@ VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
 	};
 	*runeTitle += new Label(ctx, "Runes", {.WidthScale = 0.95, .HeightScale = 0.5, .DefaultColor = RAYWHITE});
 
-	auto runeMenuButtonOptions = Component::Options{
-		.WidthScale = 1.0,
-		.HeightScale = 1.0,
-		.DefaultColor = Color{130, 130, 130, 255},
-		.HoverColor = Color{150, 150, 150, 255}};
-	auto electricClickFunc = [](Context& ctx, Component& component) { std::cout << "[ELECTRIC RUNE] Clicked!" << std::endl; };
-	auto fireClickFunc = [](Context& ctx, Component& component) { std::cout << "[FIRE RUNE] Clicked!" << std::endl; };
-	auto noneClickFunc = [](Context& ctx, Component& component) { std::cout << "[NONE RUNE] Clicked!" << std::endl; };
-	auto pureClickFunc = [](Context& ctx, Component& component) { std::cout << "[PURE RUNE] Clicked!" << std::endl; };
-	auto waterClickFunc = [](Context& ctx, Component& component) { std::cout << "[WATER RUNE] Clicked!" << std::endl; };
-	auto windClickFunc = [](Context& ctx, Component& component) { std::cout << "[WIND RUNE] Clicked!" << std::endl; };
-
-	auto electricButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(electricClickFunc));
+	auto electricButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor));
 	*electricButton += new Sprite(ctx, SpriteName::ElectricRune, {.WidthScale = .25, .HeightScale = .45});
-	auto fireButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(fireClickFunc));
+
+	auto fireButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor));
 	*fireButton += new Sprite(ctx, SpriteName::FireRune, {.WidthScale = .25, .HeightScale = .45});
-	auto noneButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(noneClickFunc));
+
+	auto noneButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor));
 	*noneButton += new Sprite(ctx, SpriteName::NoneRune, {.WidthScale = .25, .HeightScale = .45});
-	auto pureButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(pureClickFunc));
+
+	auto pureButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor));
 	*pureButton += new Sprite(ctx, SpriteName::PureRune, {.WidthScale = .25, .HeightScale = .45});
-	auto waterButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(waterClickFunc));
+
+	auto waterButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor));
 	*waterButton += new Sprite(ctx, SpriteName::WaterRune, {.WidthScale = .25, .HeightScale = .45});
-	auto windButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(windClickFunc));
+
+	auto windButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor));
 	*windButton += new Sprite(ctx, SpriteName::WindRune, {.WidthScale = .25, .HeightScale = .45});
 
 	*electricRuneBack += electricButton;
@@ -77,8 +99,6 @@ VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
 	*container2 += pureRuneBack;
 	*container2 += waterRuneBack;
 	*container2 += windRuneBack;
-
-
 
 	return runeMenu;
 };
