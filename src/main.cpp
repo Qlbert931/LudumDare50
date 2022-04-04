@@ -6,7 +6,6 @@
 
 #include "context.h"
 #include "gui/system.h"
-#include "rune.h"
 
 int main(void) {
 	Context ctx = Context();
