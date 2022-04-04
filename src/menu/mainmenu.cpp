@@ -6,12 +6,10 @@
 
 #include "gui/system.h"
 #include "gui/menus.h"
-#include "iostream"
 
-Component* Menu::CreateCombatMenu(Context& ctx) { return nullptr; }
-Component* Menu::CreateNewRuneMenu(Context& ctx) { return nullptr; }
-Component* Menu::CreateLevelUpMenu(Context& ctx) { return nullptr; }
-Component* Menu::CreatePauseMenu(Context& ctx) { return nullptr; }
+void mainMenuPlayPressed(Context& ctx, Component& component) {
+	ctx.Menu.Set(Context::Menus::Index::RuneMenu);
+}
 
 Component* Menu::CreateMainMenu(Context& ctx) {
 	auto mainMenu = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
@@ -20,24 +18,21 @@ Component* Menu::CreateMainMenu(Context& ctx) {
 	*mainMenu += titlePanel;
 	*mainMenu += buttonPanel;
 
-	auto menuButtonLabelOptions = Component::Options{
-		.WidthScale = 0.7,
-		.HeightScale = 0.7,
-		.DefaultColor = Color{200, 200, 200, 255}};
-	*titlePanel += new Label(ctx, "The Fastest RPG",{.WidthScale = 0.7, .HeightScale = 0.5, .DefaultColor = RAYWHITE});
+	*titlePanel += new Label(ctx, "The Fastest RPG",{.WidthScale = 0.7, .HeightScale = 0.5, .DefaultColor = WHITE});
 
-	auto menuButtonOptions = Component::Options{
+	*buttonPanel += (new Button(ctx, {
 		.WidthScale = 0.4,
 		.HeightScale = 0.15,
-		.DefaultColor = Color{130, 130, 130, 255},
-		.HoverColor = Color{150, 150, 150, 255}};
-	auto playClickFunc = [](Context& ctx, Component& component) { std::cout << "[PLAY] Clicked!" << std::endl; };
-	auto leaderboardClickFunc = [](Context& ctx, Component& component) { std::cout << "[LEADERBOARDS] Clicked!" << std::endl; };
-	auto playerClickFunc = [](Context& ctx, Component& component) { std::cout << "[PLAYER] Clicked!" << std::endl; };
-
-	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(playClickFunc)))->AddChild(new Label(ctx, "PLAY", menuButtonLabelOptions));
-	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(leaderboardClickFunc)))->AddChild(new Label(ctx, "LEADERBOARDS", menuButtonLabelOptions));
-	*buttonPanel += (new Button(ctx, menuButtonOptions.WithOnClick(playerClickFunc)))->AddChild(new Label(ctx, "PLAYER", menuButtonLabelOptions));
-	*buttonPanel += (new Button(ctx, menuButtonOptions))->AddChild(new Label(ctx, "VOL PLACEHOLDER", menuButtonLabelOptions));
+		.DefaultColor = ctx.Colors.Button,
+		.HoverColor = ctx.Colors.ButtonHover,
+		.OnClick = mainMenuPlayPressed}))->AddChild(new Label(ctx, "PLAY", {.WidthScale = 0.7, .HeightScale = 0.7, .DefaultColor = WHITE}));
+	auto volumeRow = new HorizontalPanel(ctx, {.WidthScale = 0.7, .HeightScale = 0.15});
+	*buttonPanel += volumeRow;
+	*volumeRow += new Label(ctx, "Volume", {.WidthScale = 0.3, .HeightScale = 1, .DefaultColor = WHITE});
+	*volumeRow += new Slider(ctx, Component::Options{
+		.WidthScale = 0.7,
+		.HeightScale = 1,
+		.DefaultColor = ctx.Colors.Slider,
+		.HoverColor = ctx.Colors.SliderHover}, WHITE, &ctx.Volume);
 	return mainMenu;
 }
