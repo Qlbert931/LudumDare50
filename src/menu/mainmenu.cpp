@@ -8,7 +8,12 @@
 #include "gui/menus.h"
 #include "iostream"
 
-VerticalPanel* Menu::CreateMainMenu(Context& ctx) {
+Component* Menu::CreateCombatMenu(Context& ctx) { return nullptr; }
+Component* Menu::CreateNewRuneMenu(Context& ctx) { return nullptr; }
+Component* Menu::CreateLevelUpMenu(Context& ctx) { return nullptr; }
+Component* Menu::CreatePauseMenu(Context& ctx) { return nullptr; }
+
+Component* Menu::CreateMainMenu(Context& ctx) {
 	auto mainMenu = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	auto titlePanel = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 0.4});
 	auto buttonPanel = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 0.6});

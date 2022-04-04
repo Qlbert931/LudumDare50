@@ -28,8 +28,8 @@ enum SpriteName {
 
 	// Icons
 	Backpack,
-	BackButton,
-	HomeButton
+	Back,
+	Home
 };
 
 class Sprite : public Component {

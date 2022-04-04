@@ -14,6 +14,8 @@ class Component;
 
 struct Colors_ {
 	Color Background = Color{30, 30, 30, 255};
+	Color Slider = Color{0, 136, 182, 255};
+	Color SliderHover = Color{0, 190, 253, 255};
 };
 
 struct Mouse_ {
@@ -57,7 +59,11 @@ public:
 			None = -1,
 			MainMenu = 0,
 			RuneMenu = 1,
-			GameOverMenu = 2
+			GameOverMenu = 2,
+			CombatMenu = 3,
+			NewRuneMenu = 4,
+			LevelUpMenu = 5,
+			PauseMenu = 6
 		};
 		void Set(Index menuIndex) { currentMenu = menuIndex; }
 		Index Current() { return currentMenu; }

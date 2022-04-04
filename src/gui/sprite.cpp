@@ -92,11 +92,11 @@ void Sprite::load(Context& ctx) {
 		case Backpack:
 			tempColorImg = LoadImage("../assets/icons/backpack.png");
 			break;
-		case BackButton:
-			tempColorImg = LoadImage("../assets/icons/backbutton.png");
+		case Back:
+			tempColorImg = LoadImage("../assets/icons/back.png");
 			break;
-		case HomeButton:
-			tempColorImg = LoadImage("../../assets/icons/homeButton.png");
+		case Home:
+			tempColorImg = LoadImage("../assets/icons/home.png");
 			break;
 	}
 

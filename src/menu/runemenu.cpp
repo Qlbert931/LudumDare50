@@ -22,7 +22,7 @@ void claimColor (Context& ctx, Component& component) {
 	clicked = false;
 }
 
-VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
+Component* Menu::CreateRuneMenu(Context& ctx) {
 
 	auto runeMenuButtonOptions = Component::Options{
 		.WidthScale = 1.0,
@@ -37,7 +37,7 @@ VerticalPanel* Menu::CreateRuneMenu(Context& ctx) {
 	*runeMenu += backButtonArea;
 
 	auto backButton = new Button(ctx, runeMenuButtonOptions.WithOnClick(claimColor).WithWidthScale(.1));
-	*backButtonArea += backButton->AddChild(new Sprite(ctx, SpriteName::BackButton, {.WidthScale = 1, .HeightScale = 1}));
+	*backButtonArea += backButton->AddChild(new Sprite(ctx, SpriteName::Back, {.WidthScale = 1, .HeightScale = 1}));
 
 	auto fillBackButtonArea = new VerticalPanel(ctx, {.WidthScale = .9, .HeightScale = 1});
 	*backButtonArea += fillBackButtonArea;
