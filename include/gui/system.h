@@ -13,5 +13,7 @@
 #include "verticalpanel.h"
 #include "sprite.h"
 #include "slider.h"
+#include "inputstepper.h"
+#include "progressbar.h"
 
 #endif //GUISYSTEM_H

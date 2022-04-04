@@ -20,6 +20,11 @@ int Label::Width(Context& ctx) {
 	return (int)((float)parent->Width(ctx) * options.WidthScale);
 }
 
+void Label::SetText(Context& ctx, std::string text) {
+	this->text = text;
+	this->textLengthAt10 = (float)MeasureText(text.c_str(), 10);
+}
+
 void Label::Draw(Context& ctx) {
 	int fontSize = Height(ctx);
 	int fontLength = MeasureText(text.c_str(), fontSize);

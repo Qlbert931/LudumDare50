@@ -6,8 +6,6 @@
 
 #include "gui/component.h"
 
-#include <utility>
-
 Component::~Component() {
 	for (Component* child : *children) {
 		delete(child);
