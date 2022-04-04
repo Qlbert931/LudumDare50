@@ -4,14 +4,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-#ifndef PROGRESSBAR_H
-#define PROGRESSBAR_H
+#ifndef BORDER_H
+#define BORDER_H
 #include "context.h"
 #include "component.h"
 
-class ProgressBar : public Component {
+class Border : public Component {
 public:
-	ProgressBar(Context& ctx, const Component::Options& options, int* maxValue, int* currentValue);
+	Border(Context& ctx, const Component::Options& options, float thicknessScale);
 	int Width(Context& ctx) override;
 	int Height(Context& ctx) override;
 
@@ -19,8 +19,7 @@ protected:
 	void Draw(Context& ctx) override;
 
 private:
-	int* maxValue;
-	int* currentValue;
+	float thicknessScale;
 };
 
-#endif //PROGRESSBAR_H
+#endif //BORDER_H

@@ -1,0 +1,61 @@
+// Copyright © 2022 Daylon Wilkins & Maxwell Chow
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+#ifndef STATE_H
+#define STATE_H
+#include "context.h"
+#include "player.h"
+#include "enemy.h"
+
+class StatusEffectInstance;
+
+namespace Chances {
+	const double Rune = 0.08474409185231704; // 25%
+	const double Boss = 0.0038016583035531547; // 5%
+	const double RarityCommon = 0.44641928058933833; // 62%
+	const double RarityUncommon = 0.08474409185231704; // 25%
+	const double RarityRare = 0.014745844781072659; // 10%
+	const double RarityEpic = 0.0006200876164358948; // 2%
+	const double RarityLegendary = 0.00015604169167720937; // 1%
+}
+
+class State {
+	friend class Context;
+
+public:
+	~State();
+
+	struct {
+		double ProgressTime = 0;
+		double ElapsedTime = 0;
+	} CurrentRun;
+
+	struct {
+		std::vector<Enemy*> Enemies;
+		std::vector<StatusEffectInstance*> StatusEffects;
+	} CurrentBattle;
+
+	struct {
+		double NewRune = 0;
+		double FindBoss = 0;
+		double NextRuneCommon = 0;
+		double NextRuneUncommon = 0;
+		double NextRuneRare = 0;
+		double NextRuneEpic = 0;
+		double NextRuneLegendary = 0;
+	} ChanceProgress;
+
+	void Reset();
+	void NextRoom();
+	void NewEnemies();
+	void GameOver();
+
+private:
+	explicit State(Context& ctx);
+	Context& ctx;
+};
+
+#endif //STATE_H

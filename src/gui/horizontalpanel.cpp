@@ -8,7 +8,6 @@
 
 HorizontalPanel::HorizontalPanel(Context& ctx, const Component::Options& options) {
 	this->options = options;
-	this->children = new std::vector<Component*>();
 }
 
 int HorizontalPanel::Height(Context& ctx) {

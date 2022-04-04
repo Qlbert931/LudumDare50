@@ -12,6 +12,7 @@
 #include "label.h"
 #include "wrappedlabel.h"
 #include "verticalpanel.h"
+#include "border.h"
 #include "sprite.h"
 #include "slider.h"
 #include "inputstepper.h"

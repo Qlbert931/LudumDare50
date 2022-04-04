@@ -16,6 +16,9 @@ enum SpriteName {
 	SpearGoblin,
 	BearBaby,
 	Golem,
+	Dragon,
+	Bird,
+	Snake,
 
 	// Runes
 	NoneRune,
@@ -49,6 +52,7 @@ enum SpriteName {
 	PhysicalArmor,
 	SpecialArmor,
 	Speed,
+	Evasion,
 	FireResistance,
 	WaterResistance,
 	ElectricResistance,

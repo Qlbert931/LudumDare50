@@ -9,61 +9,17 @@
 #include "raylib/raylib.h"
 #include "vector"
 
-class Context;
 class Component;
-
-struct Colors_ {
-	Color Background = Color{30, 30, 30, 255};
-	Color Slider = Color{0, 136, 182, 255};
-	Color SliderHover = Color{0, 190, 253, 255};
-	Color Button = Color{255, 255, 255, 50};
-	Color ButtonHover = Color{255, 255, 255, 100};
-	Color InputStepper = Color{255, 255, 255, 100};
-	Color InputStepperHover = Color{0, 190, 253, 255};
-
-	Color RarityCommon = Color{255, 255, 255, 255};
-	Color RarityUncommon = Color{30, 255, 0, 255};
-	Color RarityRare = Color{0, 112, 221, 255};
-	Color RarityEpic = Color{163, 53, 238, 255};
-	Color RarityLegendary = Color{255, 128, 0, 255};
-
-	Color ExperienceBar = Color{30, 180, 30, 255};
-	Color HealthBar = Color{180, 30, 30, 255};
-};
-
-struct Mouse_ {
-	friend class Context;
-
-public:
-	int X() { return x; }
-	int Y() { return y; }
-	bool IsDown() { return down; }
-	bool HasClicked() { return clicked; }
-
-private:
-	int x = -2147483648;
-	int y = -2147483648;
-	bool down = false;
-	bool clicked = false;
-};
-
-struct Screen_ {
-	friend class Context;
-
-public:
-	int Width() const { return width; };
-	int Height() const { return height; };
-	bool HasResized() const { return width != prevWidth || height != prevHeight; }
-
-private:
-	int width = 0;
-	int height = 0;
-	int prevWidth = 0;
-	int prevHeight = 0;
-};
+class State;
 
 class Context {
 public:
+	Context();
+	~Context();
+	void Initialize();
+	void Update();
+	void Draw();
+
 	struct Menus {
 		friend class Context;
 
@@ -88,16 +44,64 @@ public:
 		void initialize(Context& ctx);
 	};
 
-	Context();
-	~Context();
-	void Initialize();
-	void Update();
-	void Draw();
-	const Colors_ Colors;
-	Screen_ Screen;
-	Mouse_ Mouse;
-	Menus Menu;
+	struct {
+		Color Background = Color{30, 30, 30, 255};
+		Color Slider = Color{0, 136, 182, 255};
+		Color SliderHover = Color{0, 190, 253, 255};
+		Color Button = Color{255, 255, 255, 50};
+		Color ButtonHover = Color{255, 255, 255, 100};
+		Color InputStepper = Color{255, 255, 255, 100};
+		Color InputStepperHover = Color{0, 190, 253, 255};
+		Color EnemyBackground = Color{255, 255, 255, 15};
 
+		Color RarityCommon = Color{255, 255, 255, 255};
+		Color RarityUncommon = Color{30, 255, 0, 255};
+		Color RarityRare = Color{0, 112, 221, 255};
+		Color RarityEpic = Color{163, 53, 238, 255};
+		Color RarityLegendary = Color{255, 128, 0, 255};
+
+		Color ExperienceBar = Color{30, 180, 30, 255};
+		Color HealthBar = Color{180, 30, 30, 255};
+
+		Color ElementFire = Color{194, 0, 0, 255};
+		Color ElementWater = Color{41, 121, 255, 255};
+		Color ElementElectric = Color{255, 167, 38, 255};
+		Color ElementWind = Color{135, 222, 66, 255};
+	} Colors;
+
+	struct {
+		friend class Context;
+
+	public:
+		int Width() const { return width; };
+		int Height() const { return height; };
+		bool HasResized() const { return width != prevWidth || height != prevHeight; }
+
+	private:
+		int width = 0;
+		int height = 0;
+		int prevWidth = 0;
+		int prevHeight = 0;
+	} Screen;
+
+	struct {
+		friend class Context;
+
+	public:
+		int X() { return x; }
+		int Y() { return y; }
+		bool IsDown() { return down; }
+		bool HasClicked() { return clicked; }
+
+	private:
+		int x = -2147483648;
+		int y = -2147483648;
+		bool down = false;
+		bool clicked = false;
+	} Mouse;
+
+	Menus Menu;
+	State* GameState;
 	float Volume = 1;
 };
 

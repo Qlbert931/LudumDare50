@@ -8,14 +8,15 @@
 #include "gui/menus.h"
 #include "rune.h"
 
-float tempProgressBar2 = .4;
+int tempProgressBarMax2 = 83;
+int tempProgressBarCurrent2 = 22;
 
 Component* Menu::CreateNewRuneMenu(Context& ctx) {
 	auto panel = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	auto timeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .05});
 	auto newRuneRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .39});
-	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &tempProgressBar2);
-	auto experienceBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.ExperienceBar}, &tempProgressBar2);
+	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &tempProgressBarMax2, &tempProgressBarCurrent2);
+	auto experienceBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.ExperienceBar}, &tempProgressBarMax2, &tempProgressBarCurrent2);
 	auto runeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .49});
 	*panel += timeRow;
 	*panel += newRuneRow;
@@ -32,7 +33,7 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 	// New Rune Row
 	auto runeButtons = Component::Options{.WidthScale = .2, .HeightScale = .2, .DefaultColor = ctx.Colors.Button, .HoverColor = ctx.Colors.ButtonHover};
 	*newRuneRow += (new Button(ctx, runeButtons))->AddChild(new Label(ctx, "Cancel", {.WidthScale = .8, .HeightScale = .8, .DefaultColor = WHITE}));
-	*newRuneRow += Rune(ctx).GenerateComponent(ctx, {
+	*newRuneRow += Rune(ctx, true).GenerateComponent(ctx, {
 		.WidthScale = .5,
 		.HeightScale = .7,
 		.DefaultColor = ctx.Colors.Button});
@@ -62,12 +63,12 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 		.HeightScale = .48,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover};
-	*runeCol1 += Rune(ctx).GenerateComponent(ctx, runeOptions);
-	*runeCol1 += Rune(ctx).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx).GenerateComponent(ctx, runeOptions);
+	*runeCol1 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	*runeCol1 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	*runeCol2 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	*runeCol2 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	*runeCol3 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	*runeCol3 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
 
 	return panel;
 }

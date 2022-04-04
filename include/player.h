@@ -4,34 +4,27 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-#ifndef ENEMY_H
-#define ENEMY_H
-#include "context.h"
+#ifndef PLAYER_H
+#define PLAYER_H
 #include "character.h"
 
-class Enemy : public Character {
+class Player : public Character {
 public:
-    Enemy(Context& ctx, double currentTime, bool isBoss);
-    ~Enemy();
+	Player();
+	~Player();
 	int Level(Context& ctx) override;
 	double FireResistance(Context& ctx) override;
 	double WaterResistance(Context& ctx) override;
 	double ElectricResistance(Context& ctx) override;
 	double WindResistance(Context& ctx) override;
 	CharacterInstance& Instance(Context& ctx) override;
-	Component* GenerateComponent(Context& ctx, const Component::Options& options);
-	Sprite* GetSprite(Context& ctx, const Component::Options& options);
 
-	std::string Name;
-	double EncounterTime;
-	bool IsBoss;
+	int Experience;
+	int Evasion;
+	Rune Runes[6];
 
 private:
-	SpriteName spriteName;
-	double fireResistance;
-	double waterResistance;
-	double electricResistance;
-	double windResistance;
+	int level;
 };
 
-#endif //ENEMY_H
+#endif //PLAYER_H

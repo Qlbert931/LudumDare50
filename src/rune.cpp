@@ -5,13 +5,28 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 #include "rune.h"
-#include "cstdio"
+#include "statuseffect.h"
 
 Sprite* getSprite(Context& ctx, RuneAttribute::Target target, const Component::Options& options);
 Sprite* getSprite(Context& ctx, RuneAttribute::AttackType attackType, const Component::Options& options);
 Sprite* getSprite(Context& ctx, RuneAttribute::Element element, const Component::Options& options);
 
-Rune::Rune(Context& ctx) {
+Rune::Rune() {
+	Name = "Skip Turn";
+	Level = 1;
+	AdditionalLevel = 0;
+	Target = RuneAttribute::Target::Self;
+	Rarity = RuneAttribute::Rarity::Common;
+	AttackType = RuneAttribute::AttackType::Special;
+	Element = RuneAttribute::Element::None;
+	FlatDamage = 0;
+	//Buffs
+	//Debuffs
+	CritChance = 0;
+	CritMultiplier = 1;
+}
+
+Rune::Rune(Context& ctx, bool forPlayer) {
 	Name = "RuneNameGoesHere";
 	Level = GetRandomValue(0, 50);
 	AdditionalLevel = GetRandomValue(0, 5);
@@ -22,9 +37,17 @@ Rune::Rune(Context& ctx) {
 	FlatDamage = GetRandomValue(0, 500);
 	//Buffs
 	//Debuffs
-	//Effect
 	CritChance = (double)GetRandomValue(10, 200) / 100.0;
 	CritMultiplier = (double)GetRandomValue(110, 400) / 100.0;
+}
+
+Rune::~Rune() {
+	for (auto buff : Buffs) {
+		delete(buff);
+	}
+	for (auto debuff : Debuffs) {
+		delete(debuff);
+	}
 }
 
 Color Rune::GetRarityColor(Context& ctx) {
@@ -55,13 +78,75 @@ std::string Rune::FormattedName(Context& ctx) {
 	return FormatName(ctx, (int)AdditionalLevel);
 }
 
+std::string Rune::EffectText(Context& ctx) {
+	if (Buffs.empty() && Debuffs.empty()) {
+		std::string str;
+		switch (AttackType) {
+			case RuneAttribute::Physical:
+				str += "A physical attack";
+				break;
+			case RuneAttribute::Special:
+				str += "A special attack";
+				break;
+		}
+		switch (Element) {
+			case RuneAttribute::None:
+				str += " affected by armor";
+				break;
+			case RuneAttribute::Fire:
+				str += " affected by fire resistance and armor";
+				break;
+			case RuneAttribute::Water:
+				str += " affected by water resistance and armor";
+				break;
+			case RuneAttribute::Electric:
+				str += " affected by electric resistance and armor";
+				break;
+			case RuneAttribute::Wind:
+				str += " affected by wind resistance and armor";
+				break;
+			case RuneAttribute::Omni:
+				str += " affected by all resistances and unaffected by armor";
+				break;
+			case RuneAttribute::Pure:
+				str += " unaffected by any resistances or armor";
+				break;
+		}
+		switch (Target) {
+			case RuneAttribute::SingleEnemy:
+				str += " on a single enemy.";
+				break;
+			case RuneAttribute::AllEnemies:
+				str += " on all enemies.";
+				break;
+			case RuneAttribute::Self:
+				str += " on yourself.";
+				break;
+			case RuneAttribute::SelfAndSingleEnemy:
+				str += " on a single enemy and yourself.";
+				break;
+			case RuneAttribute::SelfAndAllEnemies:
+				str += " on everyone, including yourself.";
+				break;
+		}
+		return str;
+	}
+	std::string str;
+	for (auto buff : Buffs) {
+		str += buff->Description(ctx);
+	}
+	for (auto debuff : Debuffs) {
+		str += debuff->Description(ctx);
+	}
+	return str;
+}
+
 Component* Rune::GenerateComponent(Context& ctx, const Component::Options& options) {
-	std::string testText = "This is a long description of this rune's effect. Some descriptions may be significantly longer, but if they are...well I hope they're saying something worthwhile. Can't say this one is saying anything worthwhile, but hey it is a lot of text, and that's useful to test out what a long description could look like.";
 	auto panel = new VerticalPanel(ctx, options);
 	auto topRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .18});
 	auto damageRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .18});
 	auto buffDebuffRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .18});
-	auto effectRow = new WrappedLabel(ctx, testText, {.WidthScale = .98, .HeightScale = .4, .DefaultColor = WHITE});
+	auto effectRow = new WrappedLabel(ctx, EffectText(ctx), {.WidthScale = .98, .HeightScale = .4, .DefaultColor = WHITE});
 	*panel += topRow;
 	*panel += damageRow;
 	*panel += buffDebuffRow;
@@ -95,6 +180,354 @@ Component* Rune::GenerateComponent(Context& ctx, const Component::Options& optio
 	*buffDebuffRow += debuffsPanel;
 
 	return panel;
+}
+
+double Rune::FireResistance(Context& ctx) {
+	switch (Element) {
+		case RuneAttribute::None:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return 0;
+				case RuneAttribute::Uncommon:
+					return 0;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return .02;
+				case RuneAttribute::Legendary:
+					return .05;
+			}
+		case RuneAttribute::Fire:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .08;
+				case RuneAttribute::Uncommon:
+					return .12;
+				case RuneAttribute::Rare:
+					return .18;
+				case RuneAttribute::Epic:
+					return .30;
+				case RuneAttribute::Legendary:
+					return .50;
+			}
+		case RuneAttribute::Water:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Electric:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Wind:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return .02;
+				case RuneAttribute::Legendary:
+					return .05;
+			}
+		case RuneAttribute::Omni:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .01;
+				case RuneAttribute::Uncommon:
+					return .02;
+				case RuneAttribute::Rare:
+					return .04;
+				case RuneAttribute::Epic:
+					return .08;
+				case RuneAttribute::Legendary:
+					return .12;
+			}
+		case RuneAttribute::Pure:
+			return 0;
+			break;
+	}
+	return 0;
+}
+
+double Rune::WaterResistance(Context& ctx) {
+	switch (Element) {
+		case RuneAttribute::None:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return 0;
+				case RuneAttribute::Uncommon:
+					return 0;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return .02;
+				case RuneAttribute::Legendary:
+					return .05;
+			}
+		case RuneAttribute::Fire:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Water:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .08;
+				case RuneAttribute::Uncommon:
+					return .12;
+				case RuneAttribute::Rare:
+					return .18;
+				case RuneAttribute::Epic:
+					return .30;
+				case RuneAttribute::Legendary:
+					return .50;
+			}
+		case RuneAttribute::Electric:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Wind:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return .02;
+				case RuneAttribute::Legendary:
+					return .05;
+			}
+		case RuneAttribute::Omni:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .01;
+				case RuneAttribute::Uncommon:
+					return .02;
+				case RuneAttribute::Rare:
+					return .04;
+				case RuneAttribute::Epic:
+					return .08;
+				case RuneAttribute::Legendary:
+					return .12;
+			}
+		case RuneAttribute::Pure:
+			return 0;
+			break;
+	}
+	return 0;
+}
+
+double Rune::ElectricResistance(Context& ctx) {
+	switch (Element) {
+		case RuneAttribute::None:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return 0;
+				case RuneAttribute::Uncommon:
+					return 0;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return .02;
+				case RuneAttribute::Legendary:
+					return .05;
+			}
+		case RuneAttribute::Fire:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Water:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Electric:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .08;
+				case RuneAttribute::Uncommon:
+					return .12;
+				case RuneAttribute::Rare:
+					return .18;
+				case RuneAttribute::Epic:
+					return .30;
+				case RuneAttribute::Legendary:
+					return .50;
+			}
+		case RuneAttribute::Wind:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return .02;
+				case RuneAttribute::Legendary:
+					return .05;
+			}
+		case RuneAttribute::Omni:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .01;
+				case RuneAttribute::Uncommon:
+					return .02;
+				case RuneAttribute::Rare:
+					return .04;
+				case RuneAttribute::Epic:
+					return .08;
+				case RuneAttribute::Legendary:
+					return .12;
+			}
+		case RuneAttribute::Pure:
+			return 0;
+			break;
+	}
+	return 0;
+}
+
+double Rune::WindResistance(Context& ctx) {
+	switch (Element) {
+		case RuneAttribute::None:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return 0;
+				case RuneAttribute::Uncommon:
+					return 0;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return .02;
+				case RuneAttribute::Legendary:
+					return .05;
+			}
+		case RuneAttribute::Fire:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Water:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Electric:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return -.05;
+				case RuneAttribute::Uncommon:
+					return -.03;
+				case RuneAttribute::Rare:
+					return 0;
+				case RuneAttribute::Epic:
+					return 2;
+				case RuneAttribute::Legendary:
+					return 5;
+			}
+		case RuneAttribute::Wind:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .08;
+				case RuneAttribute::Uncommon:
+					return .12;
+				case RuneAttribute::Rare:
+					return .18;
+				case RuneAttribute::Epic:
+					return .30;
+				case RuneAttribute::Legendary:
+					return .50;
+			}
+		case RuneAttribute::Omni:
+			switch (Rarity) {
+				case RuneAttribute::Common:
+					return .01;
+				case RuneAttribute::Uncommon:
+					return .02;
+				case RuneAttribute::Rare:
+					return .04;
+				case RuneAttribute::Epic:
+					return .08;
+				case RuneAttribute::Legendary:
+					return .12;
+			}
+		case RuneAttribute::Pure:
+			return 0;
+			break;
+	}
+	return 0;
 }
 
 Sprite* getSprite(Context& ctx, RuneAttribute::Target target, const Component::Options& options) {
