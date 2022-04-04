@@ -47,8 +47,13 @@ public:
 	Rune(Context& ctx);
 	Component* GenerateComponent(Context& ctx, const Component::Options& options);
 	Color GetRarityColor(Context& ctx);
+	std::string FormatName(Context& ctx, int additionalLevels);
+	std::string FormattedName(Context& ctx);
+	Sprite* GetSprite(Context& ctx, const Component::Options& options);
 
+	std::string Name;
 	double Level;
+	int AdditionalLevel;
 	RuneAttribute::Target Target;
 	RuneAttribute::Rarity Rarity;
 	RuneAttribute::AttackType AttackType;

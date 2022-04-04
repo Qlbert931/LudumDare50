@@ -15,8 +15,8 @@ void runeMenuBackPressed(Context& ctx, Component& component) {
 Component* Menu::CreateRuneMenu(Context& ctx) {
 	auto runeMenu = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 
-	auto backButtonRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .1});
-	*runeMenu += backButtonRow;
+	auto topButtonRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .1});
+	*runeMenu += topButtonRow;
 	auto backButton = new Button(ctx, Component::Options{
 		.WidthScale = .1,
 		.HeightScale = .85,
@@ -24,12 +24,19 @@ Component* Menu::CreateRuneMenu(Context& ctx) {
 		.HoverColor = ctx.Colors.ButtonHover,
 		.OnClick = runeMenuBackPressed,
 	});
-	*backButtonRow += backButton;
-	*backButtonRow += new VerticalPanel(ctx, {.WidthScale = .88, .HeightScale = 1});
+	*topButtonRow += backButton;
+	*topButtonRow += new VerticalPanel(ctx, {.WidthScale = .78, .HeightScale = 1});
 	auto innerBackButton = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	*backButton += innerBackButton;
 	*innerBackButton += new Sprite(ctx, SpriteName::Back, {.WidthScale = .35, .HeightScale = .9});
 	*innerBackButton += new Label(ctx, "Back", {.WidthScale = .55, .HeightScale = 1, .DefaultColor = WHITE});
+	auto playButton = (new Button(ctx, Component::Options{
+		.WidthScale = .1,
+		.HeightScale = .85,
+		.DefaultColor = ctx.Colors.Button,
+		.HoverColor = ctx.Colors.ButtonHover,
+	}))->AddChild(new Label(ctx, "Play", {.WidthScale = .55, .HeightScale = 1, .DefaultColor = WHITE}));
+	*topButtonRow += playButton;
 
 	auto runeTitle = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = .2});
 	*runeTitle += new Label(ctx, "Runes", {.WidthScale = 1, .HeightScale = 1, .DefaultColor = WHITE});

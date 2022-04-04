@@ -18,12 +18,17 @@ struct Colors_ {
 	Color SliderHover = Color{0, 190, 253, 255};
 	Color Button = Color{255, 255, 255, 50};
 	Color ButtonHover = Color{255, 255, 255, 100};
+	Color InputStepper = Color{255, 255, 255, 100};
+	Color InputStepperHover = Color{0, 190, 253, 255};
 
 	Color RarityCommon = Color{255, 255, 255, 255};
 	Color RarityUncommon = Color{30, 255, 0, 255};
 	Color RarityRare = Color{0, 112, 221, 255};
 	Color RarityEpic = Color{163, 53, 238, 255};
 	Color RarityLegendary = Color{255, 128, 0, 255};
+
+	Color ExperienceBar = Color{30, 180, 30, 255};
+	Color HealthBar = Color{180, 30, 30, 255};
 };
 
 struct Mouse_ {

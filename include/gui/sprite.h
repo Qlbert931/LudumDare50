@@ -41,6 +41,30 @@ enum SpriteName {
 	// Attack Types
 	Physical,
 	Special,
+
+	// Stats
+	Health,
+	PhysicalAttack,
+	SpecialAttack,
+	PhysicalArmor,
+	SpecialArmor,
+	Speed,
+	FireResistance,
+	WaterResistance,
+	ElectricResistance,
+	WindResistance,
+
+	// Buffs
+	Lifesteal,
+	Lucky,
+	Adrenaline,
+	ElementalShield,
+
+	// Debuffs
+	Poison,
+	Bleed,
+	Sleep,
+	Sick,
 };
 
 class Sprite : public Component {

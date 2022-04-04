@@ -25,7 +25,7 @@ Component* Menu::CreateMainMenu(Context& ctx) {
 		.HeightScale = 0.15,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover,
-		.OnClick = mainMenuPlayPressed}))->AddChild(new Label(ctx, "PLAY", {.WidthScale = 0.7, .HeightScale = 0.7, .DefaultColor = WHITE}));
+		.OnClick = mainMenuPlayPressed}))->AddChild(new Label(ctx, "Play", {.WidthScale = 0.7, .HeightScale = 0.7, .DefaultColor = WHITE}));
 	auto volumeRow = new HorizontalPanel(ctx, {.WidthScale = 0.7, .HeightScale = 0.15});
 	*buttonPanel += volumeRow;
 	*volumeRow += new Label(ctx, "Volume", {.WidthScale = 0.3, .HeightScale = 1, .DefaultColor = WHITE});

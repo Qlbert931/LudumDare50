@@ -119,6 +119,62 @@ void Sprite::load(Context& ctx) {
 		case Special:
 			tempColorImg = LoadImage("../assets/attacktypes/special.png");
 			break;
+		case Health:
+			tempColorImg = LoadImage("../assets/stats/health.png");
+			break;
+		case PhysicalAttack:
+			tempColorImg = LoadImage("../assets/attacktypes/physical.png");
+			break;
+		case SpecialAttack:
+			tempColorImg = LoadImage("../assets/attacktypes/special.png");
+			break;
+		case PhysicalArmor:
+			tempColorImg = LoadImage("../assets/stats/physicalarmor.png");
+			break;
+		case SpecialArmor:
+			tempColorImg = LoadImage("../assets/stats/specialarmor.png");
+			break;
+		case Speed:
+			tempColorImg = LoadImage("../assets/stats/speed.png");
+			break;
+		case FireResistance:
+			tempColorImg = LoadImage("../assets/stats/fireresistance.png");
+			break;
+		case WaterResistance:
+			tempColorImg = LoadImage("../assets/stats/waterresistance.png");
+			break;
+		case ElectricResistance:
+			tempColorImg = LoadImage("../assets/stats/electricresistance.png");
+			break;
+		case WindResistance:
+			tempColorImg = LoadImage("../assets/stats/windresistance.png");
+			break;
+		case Lifesteal:
+			tempColorImg = LoadImage("../assets/buffdebuff/lifesteal.png");
+			break;
+		case Lucky:
+			tempColorImg = LoadImage("../assets/buffdebuff/lucky.png");
+			break;
+		case Adrenaline:
+			tempColorImg = LoadImage("../assets/buffdebuff/adrenaline.png");
+			break;
+		case ElementalShield:
+			hasGray = true;
+			tempColorImg = LoadImage("../assets/buffdebuff/shieldcolor.png");
+			tempGrayImg = LoadImage("../assets/buffdebuff/shieldgray.png");
+			break;
+		case Poison:
+			tempColorImg = LoadImage("../assets/buffdebuff/poison.png");
+			break;
+		case Bleed:
+			tempColorImg = LoadImage("../assets/buffdebuff/bleed.png");
+			break;
+		case Sleep:
+			tempColorImg = LoadImage("../assets/buffdebuff/sleep.png");
+			break;
+		case Sick:
+			tempColorImg = LoadImage("../assets/buffdebuff/sick.png");
+			break;
 	}
 
 	// Scale the image based on the width/height. Use the smallest scaling factor, so that no dimension is larger than our bounds.

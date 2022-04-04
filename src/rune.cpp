@@ -12,7 +12,9 @@ Sprite* getSprite(Context& ctx, RuneAttribute::AttackType attackType, const Comp
 Sprite* getSprite(Context& ctx, RuneAttribute::Element element, const Component::Options& options);
 
 Rune::Rune(Context& ctx) {
+	Name = "RuneNameGoesHere";
 	Level = GetRandomValue(0, 50);
+	AdditionalLevel = GetRandomValue(0, 5);
 	Target = (RuneAttribute::Target)GetRandomValue(0, 4);
 	Rarity = (RuneAttribute::Rarity)GetRandomValue(0, 4);
 	AttackType = (RuneAttribute::AttackType)GetRandomValue(0, 1);
@@ -41,6 +43,18 @@ Color Rune::GetRarityColor(Context& ctx) {
 	return WHITE;
 }
 
+std::string Rune::FormatName(Context& ctx, int additionalLevels) {
+	if (AdditionalLevel <= 0) {
+		return Name;
+	} else {
+		return std::string(TextFormat("%s +%i", Name.c_str(), additionalLevels));
+	}
+}
+
+std::string Rune::FormattedName(Context& ctx) {
+	return FormatName(ctx, (int)AdditionalLevel);
+}
+
 Component* Rune::GenerateComponent(Context& ctx, const Component::Options& options) {
 	std::string testText = "This is a long description of this rune's effect. Some descriptions may be significantly longer, but if they are...well I hope they're saying something worthwhile. Can't say this one is saying anything worthwhile, but hey it is a lot of text, and that's useful to test out what a long description could look like.";
 	auto panel = new VerticalPanel(ctx, options);
@@ -55,7 +69,7 @@ Component* Rune::GenerateComponent(Context& ctx, const Component::Options& optio
 
 	// Top Row
 	auto runeElement = getSprite(ctx, Element, {.WidthScale = .15, .HeightScale = 1});
-	auto runeName = new Label(ctx, "RuneNameGoesHere", {.WidthScale = .55, .HeightScale = 1, .DefaultColor = GetRarityColor(ctx)});
+	auto runeName = new Label(ctx, FormattedName(ctx), {.WidthScale = .55, .HeightScale = 1, .DefaultColor = GetRarityColor(ctx)});
 	auto runeAttackType = getSprite(ctx, AttackType, {.WidthScale = .15, .HeightScale = .95});
 	auto runeTarget = getSprite(ctx, Target, {.WidthScale = .15, .HeightScale = 1});
 	*topRow += runeElement;
@@ -127,4 +141,8 @@ Sprite* getSprite(Context& ctx, RuneAttribute::Element element, const Component:
 			return new Sprite(ctx, SpriteName::PureRune, options);
 	}
 	return nullptr;
+}
+
+Sprite* Rune::GetSprite(Context& ctx, const Component::Options& options) {
+	return getSprite(ctx, Element, options);
 }
