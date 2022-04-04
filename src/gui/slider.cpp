@@ -23,7 +23,24 @@ int Slider::Width(Context& ctx) {
 
 void Slider::Update(Context& ctx) {
 	Component::Update(ctx);
-	//TODO: handle dragging and sliding
+	if (IsMouseDown(ctx)) {
+		int height = Height(ctx);
+		int width = Width(ctx);
+		int tabSize = height;
+		if (width < height) {
+			tabSize = width;
+		}
+		int startX = X() + (tabSize / 2);
+		int endX = X() + width - (tabSize / 2);
+		int mouseX = ctx.Mouse.X();
+		if (mouseX < startX) {
+			*trackedValue = 0;
+		} else if (mouseX > endX) {
+			*trackedValue = 1;
+		} else {
+			*trackedValue = (float)(mouseX - startX) / (float)(endX - startX);
+		}
+	}
 	for (auto child : *children) {
 		child->Update(ctx);
 	}
@@ -43,7 +60,7 @@ void Slider::Draw(Context& ctx) {
 		tabSize = width;
 	}
 	int moveableLength = width - tabSize;
-	int tabX = X() + (tabSize / 2) + (int)((float)moveableLength * (*trackedValue));
+	int tabX = X() + + (int)((float)moveableLength * (*trackedValue));
 	int tabY = Y() + (height / 2) - (tabSize / 2);
 	DrawRectangle(tabX, tabY, tabSize, tabSize, trackColor);
 	for (auto child : *children) {
