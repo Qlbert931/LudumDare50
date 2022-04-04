@@ -16,6 +16,14 @@ struct Colors_ {
 	Color Background = Color{30, 30, 30, 255};
 	Color Slider = Color{0, 136, 182, 255};
 	Color SliderHover = Color{0, 190, 253, 255};
+	Color Button = Color{255, 255, 255, 50};
+	Color ButtonHover = Color{255, 255, 255, 100};
+
+	Color RarityCommon = Color{255, 255, 255, 255};
+	Color RarityUncommon = Color{30, 255, 0, 255};
+	Color RarityRare = Color{0, 112, 221, 255};
+	Color RarityEpic = Color{163, 53, 238, 255};
+	Color RarityLegendary = Color{255, 128, 0, 255};
 };
 
 struct Mouse_ {
@@ -84,6 +92,8 @@ public:
 	Screen_ Screen;
 	Mouse_ Mouse;
 	Menus Menu;
+
+	float Volume = 1;
 };
 
 #endif //CONTEXT_H

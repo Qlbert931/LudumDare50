@@ -10,6 +10,7 @@
 #include "button.h"
 #include "horizontalpanel.h"
 #include "label.h"
+#include "wrappedlabel.h"
 #include "verticalpanel.h"
 #include "sprite.h"
 #include "slider.h"

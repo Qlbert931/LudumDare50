@@ -6,6 +6,7 @@
 
 #include "context.h"
 #include "gui/system.h"
+#include "rune.h"
 
 int main(void) {
 	Context ctx = Context();
@@ -15,7 +16,6 @@ int main(void) {
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
 	ctx.Initialize();
-	ctx.Menu.Set(Context::Menus::GameOverMenu);
 
 	while (!WindowShouldClose()) {
 		ctx.Update();

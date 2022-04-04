@@ -98,6 +98,27 @@ void Sprite::load(Context& ctx) {
 		case Home:
 			tempColorImg = LoadImage("../assets/icons/home.png");
 			break;
+		case SingleEnemy:
+			tempColorImg = LoadImage("../assets/targets/singleenemy.png");
+			break;
+		case AllEnemies:
+			tempColorImg = LoadImage("../assets/targets/allenemies.png");
+			break;
+		case Self:
+			tempColorImg = LoadImage("../assets/targets/self.png");
+			break;
+		case SelfAndSingleEnemy:
+			tempColorImg = LoadImage("../assets/targets/selfandsingleenemy.png");
+			break;
+		case SelfAndAllEnemies:
+			tempColorImg = LoadImage("../assets/targets/selfandallenemies.png");
+			break;
+		case Physical:
+			tempColorImg = LoadImage("../assets/attacktypes/physical.png");
+			break;
+		case Special:
+			tempColorImg = LoadImage("../assets/attacktypes/special.png");
+			break;
 	}
 
 	// Scale the image based on the width/height. Use the smallest scaling factor, so that no dimension is larger than our bounds.

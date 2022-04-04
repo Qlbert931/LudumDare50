@@ -29,7 +29,18 @@ enum SpriteName {
 	// Icons
 	Backpack,
 	Back,
-	Home
+	Home,
+
+	// Targets
+	SingleEnemy,
+	AllEnemies,
+	Self,
+	SelfAndSingleEnemy,
+	SelfAndAllEnemies,
+
+	// Attack Types
+	Physical,
+	Special,
 };
 
 class Sprite : public Component {
