@@ -12,6 +12,7 @@
 namespace Menu {
 	VerticalPanel* CreateMainMenu(Context& ctx);
 	VerticalPanel* CreateRuneMenu(Context& ctx);
+	VerticalPanel* CreateGameOverMenu(Context& ctx);
 }
 
 #endif //MENUS_H

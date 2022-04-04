@@ -15,7 +15,7 @@ int main(void) {
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 
 	ctx.Initialize();
-	ctx.Menu.Set(Context::Menus::RuneMenu);
+	ctx.Menu.Set(Context::Menus::GameOverMenu);
 
 	while (!WindowShouldClose()) {
 		ctx.Update();
