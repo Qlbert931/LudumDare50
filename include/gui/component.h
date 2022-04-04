@@ -19,11 +19,11 @@ public:
 	virtual int Width(Context& ctx) = 0;
 	virtual int Height(Context& ctx) = 0;
 	virtual void Update(Context& ctx);
+	virtual void OnClick(Context& ctx);
 	Component* AddChild(Component* child);
 	void DrawComponent(Context& ctx, int x, int y);
 	bool IsMouseOver(Context& ctx);
 	bool IsMouseDown(Context& ctx);
-	void OnClick(Context& ctx);
 	int X() { return x; }
 	int Y() { return y; }
 	void operator +=(Component* component);
