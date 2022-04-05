@@ -67,6 +67,7 @@ public:
 	void NewGame();
 	void NextRoom();
 	void GameOver();
+	void Attack(int runeIndex);
 
 private:
 	explicit State(Context& ctx);

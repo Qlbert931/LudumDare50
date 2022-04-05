@@ -104,6 +104,10 @@ void State::NextRoom() {
 	}
 }
 
+void State::Attack(int runeIndex) {
+
+}
+
 void State::GameOver() {
 	for (auto enemy : CurrentBattle.Enemies) {
 		delete(enemy);
