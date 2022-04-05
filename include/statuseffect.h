@@ -26,17 +26,17 @@ public:
 
 class StatusEffectInstance {
 public:
-	StatusEffectInstance(StatusEffect& status, Character& target, Character& caster) : StatusEffect(status), Target(target), Caster(caster) {};
-	void PreAttack(Context& ctx, CharacterInstance& character) { StatusEffect.PreAttack(ctx, character, *this); };
-	void PostAttack(Context& ctx, CharacterInstance& character, int damageDealt) { StatusEffect.PostAttack(ctx, character, *this, damageDealt); };
-	void PreHit(Context& ctx, CharacterInstance& character) { StatusEffect.PreHit(ctx, character, *this); };
-	void PostHit(Context& ctx, CharacterInstance& character, int damageReceived) { StatusEffect.PostHit(ctx, character, *this, damageReceived); };
+	StatusEffectInstance(StatusEffect& status, Character& target, Character& caster) : statusEffect(status), Target(target), Caster(caster) {};
+	void PreAttack(Context& ctx, CharacterInstance& character) { statusEffect.PreAttack(ctx, character, *this); };
+	void PostAttack(Context& ctx, CharacterInstance& character, int damageDealt) { statusEffect.PostAttack(ctx, character, *this, damageDealt); };
+	void PreHit(Context& ctx, CharacterInstance& character) { statusEffect.PreHit(ctx, character, *this); };
+	void PostHit(Context& ctx, CharacterInstance& character, int damageReceived) { statusEffect.PostHit(ctx, character, *this, damageReceived); };
 	bool IsCaster(Context& ctx, Character& character) { return &Caster == &character; }
 	bool IsTarget(Context& ctx, Character& character) { return &Target == &character; }
-	bool IsBuff(Context& ctx) { return StatusEffect.IsBuff(ctx); }
+	bool IsBuff(Context& ctx) { return statusEffect.IsBuff(ctx); }
 	bool ShouldRemoveInstance(Context& ctx) { return TurnsRemaining != -1 && TurnsRemaining <= 0; }
 
-	StatusEffect& StatusEffect;
+	StatusEffect& statusEffect;
 	Character& Target;
 	Character& Caster;
 	int TurnsRemaining{};

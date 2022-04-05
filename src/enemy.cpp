@@ -177,11 +177,11 @@ Component* Enemy::GenerateComponent(Context& ctx, const Component::Options& opti
 
 	// Buff/Debuff Row
 	auto statusEffectOption = Component::Options{.WidthScale = .1, .HeightScale = 1};
-	for (StatusEffectInstance* statusEffect : ctx.GameState->CurrentBattle.StatusEffects) {
-		if (statusEffect->IsCaster(ctx, *this) && statusEffect->IsBuff(ctx)) {
-			*statusEffectsRow += statusEffect->StatusEffect.GetSprite(ctx, statusEffectOption);
-		} else if (statusEffect->IsTarget(ctx, *this) && !statusEffect->IsBuff(ctx)) {
-			*statusEffectsRow += statusEffect->StatusEffect.GetSprite(ctx, statusEffectOption);
+	for (StatusEffectInstance* statusEffectInstance : ctx.GameState->CurrentBattle.StatusEffects) {
+		if (statusEffectInstance->IsCaster(ctx, *this) && statusEffectInstance->IsBuff(ctx)) {
+			*statusEffectsRow += statusEffectInstance->statusEffect.GetSprite(ctx, statusEffectOption);
+		} else if (statusEffectInstance->IsTarget(ctx, *this) && !statusEffectInstance->IsBuff(ctx)) {
+			*statusEffectsRow += statusEffectInstance->statusEffect.GetSprite(ctx, statusEffectOption);
 		}
 	}
 
