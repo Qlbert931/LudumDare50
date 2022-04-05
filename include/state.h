@@ -34,6 +34,8 @@ public:
 		Player PlayerCharacter;
 		Rune* AddingRune = new Rune();
 		int ReplacingIndex;
+		int EnemiesKilled = 0;
+		int BossesKilled = 0;
 
 		std::string ProgressTimeString() {
 			int hours = ProgressTime / 3600;
@@ -50,7 +52,9 @@ public:
 	} CurrentRun;
 
 	struct {
+		int PlayerTurnSpeed = 0;
 		std::vector<Enemy*> Enemies;
+		std::vector<int> EnemyTurnSpeeds;
 		std::vector<StatusEffectInstance*> StatusEffects;
 	} CurrentBattle;
 
@@ -66,6 +70,7 @@ public:
 
 	void NewGame();
 	void NextRoom();
+	void NextTurn();
 	void GameOver();
 	void Attack(int runeIndex);
 

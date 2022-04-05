@@ -9,6 +9,18 @@
 #include "state.h"
 #include "cmath"
 #include "statuseffect.h"
+#include "random"
+#include "queue"
+
+std::random_device rd;
+std::mt19937 mt(rd());
+std::uniform_real_distribution<double> dist(0.0, std::nextafter(1.0, 2));
+
+std::queue<Component*> toDelete;
+
+double GetRandomDouble() {
+	return dist(mt);
+}
 
 Context::Context() {
 	GameState = new State(*this);
@@ -21,6 +33,10 @@ Context::~Context() {
 		delete(menu);
 	}
 	delete(this->GameState);
+	while (!toDelete.empty()) {
+		delete(toDelete.front());
+		toDelete.pop();
+	}
 }
 
 void Context::Initialize() {
@@ -28,6 +44,11 @@ void Context::Initialize() {
 }
 
 void Context::Update() {
+	while (!toDelete.empty()) {
+		delete(toDelete.front());
+		toDelete.pop();
+	}
+
 	// Screen
 	Screen.prevWidth = Screen.width;
 	Screen.prevHeight = Screen.height;
@@ -76,24 +97,24 @@ void Context::Menus::initialize(Context& ctx) {
 
 void Context::Menus::ReloadGameOverMenu(Context& ctx) {
 	Component* original = menus.at(2);
-	delete(original);
+	toDelete.push(original);
 	menus[2] = Menu::CreateGameOverMenu(ctx);
 }
 
 void Context::Menus::ReloadCombatMenu(Context& ctx) {
 	Component* original = menus.at(3);
-	delete(original);
+	toDelete.push(original);
 	menus[3] = Menu::CreateCombatMenu(ctx);
 }
 
 void Context::Menus::ReloadNewRuneMenu(Context& ctx) {
 	Component* original = menus.at(4);
-	delete(original);
+	toDelete.push(original);
 	menus[4] = Menu::CreateNewRuneMenu(ctx);
 }
 
 void Context::Menus::ReloadLevelUpMenu(Context& ctx) {
 	Component* original = menus.at(5);
-	delete(original);
+	toDelete.push(original);
 	menus[5] = Menu::CreateLevelUpMenu(ctx);
 }

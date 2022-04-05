@@ -52,7 +52,6 @@ double Player::WindResistance(Context& ctx) {
 
 CharacterInstance& Player::Instance(Context& ctx) {
 	instance.MaxHealth = Health;
-	instance.CurrentHealth = CurrentHealth;
 	instance.PhysicalAttack = PhysicalAttack;
 	instance.SpecialAttack = SpecialAttack;
 	instance.PhysicalArmor = PhysicalArmor;

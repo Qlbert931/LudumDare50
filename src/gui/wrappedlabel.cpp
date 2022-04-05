@@ -49,7 +49,7 @@ void WrappedLabel::calculateFontSize(Context& ctx) {
 		fontSize = height;
 		return;
 	}
-	float wrapAccumulation = .93;
+	float wrapAccumulation = .85;
 	for (int lines = 2; true; lines++) {
 		fontSize = height / lines;
 		if (fontSize < 9) {

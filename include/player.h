@@ -20,12 +20,12 @@ public:
 	CharacterInstance& Instance(Context& ctx) override;
 	void LevelUp(Context& ctx) { level += 1; }
 
-	int Experience;
-	int Evasion;
+	int Experience = 0;
+	int Evasion = 10;
 	Rune Runes[6];
 
 private:
-	int level;
+	int level = 1;
 };
 
 #endif //PLAYER_H

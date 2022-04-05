@@ -11,8 +11,7 @@
 
 class Enemy : public Character {
 public:
-    Enemy(Context& ctx, double currentTime, bool isBoss);
-    ~Enemy();
+    Enemy(Context& ctx, bool isBoss);
 	int Level(Context& ctx) override;
 	double FireResistance(Context& ctx) override;
 	double WaterResistance(Context& ctx) override;
@@ -24,6 +23,7 @@ public:
 
 	std::string Name;
 	double EncounterTime;
+	double BaseDamage;
 	bool IsBoss;
 
 private:
@@ -32,6 +32,7 @@ private:
 	double waterResistance;
 	double electricResistance;
 	double windResistance;
+	double debuffResistance;
 };
 
 #endif //ENEMY_H
