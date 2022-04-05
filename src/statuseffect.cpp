@@ -6,8 +6,8 @@
 
 #include "statuseffect.h"
 
-StatusEffectInstance* BuffLifesteal::GetInstance(Context& ctx) {
-	return nullptr;
+StatusEffectInstance* BuffLifesteal::GetInstance(Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
 }
 
 void BuffLifesteal::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {}
@@ -36,16 +36,19 @@ Sprite* BuffLifesteal::GetSprite(Context& ctx, const Component::Options& options
 }
 
 std::string BuffLifesteal::Description(Context& ctx) {
-	return TextFormat("Adds a buff giving %03.00f% lifesteal for %i turns.", (float)Strength, TurnCounter);
+	return TextFormat("Adds a buff giving %03.00f% life steal for %i turns.", (float)Strength, TurnCounter);
 }
 
 bool BuffLifesteal::IsBuff(Context& ctx) {
 	return true;
 }
 
-StatusEffectInstance* BuffLucky::GetInstance(Context& ctx) { return nullptr; }
+StatusEffectInstance* BuffLucky::GetInstance (Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
+}
 
 void BuffLucky::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
+	CritChance += CritChance * ctx.GameState->CurrentRun.ElapsedTime;
 	character.CritChance = CritChance;
 }
 void BuffLucky::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {
@@ -61,18 +64,21 @@ Sprite* BuffLucky::GetSprite(Context& ctx, const Component::Options& options) {
 }
 
 std::string BuffLucky::Description(Context& ctx) {
-	return TextFormat("Adds a buff giving 100% Critical Chance for %i turns.", TurnCounter);
+	return TextFormat("Adds a buff giving %03.00f% additional Critical Chance for %i turns.", (float) CritChance, TurnCounter);
 }
 
 bool BuffLucky::IsBuff(Context& ctx) {
 	return true;
 }
 
-StatusEffectInstance* BuffAdrenaline::GetInstance(Context& ctx) { return nullptr; }
+StatusEffectInstance* BuffAdrenaline::GetInstance (Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
+}
 
 void BuffAdrenaline::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
-	character.PhysicalAttack *= AttackBoost;
-	character.SpecialAttack *= AttackBoost;
+	AttackBoost += AttackBoost * ctx.GameState->CurrentRun.ElapsedTime;
+	character.PhysicalAttack *= (int) AttackBoost;
+	character.SpecialAttack *= (int) AttackBoost;
 }
 void BuffAdrenaline::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {
 	if (instance.TurnsRemaining > 0) {
@@ -85,26 +91,29 @@ Sprite* BuffAdrenaline::GetSprite(Context& ctx, const Component::Options& option
 	return new Sprite(ctx, SpriteName::Adrenaline, options);
 }
 std::string BuffAdrenaline::Description(Context& ctx) {
-	return TextFormat("Adds a buff boosting attack by 150% for %i turns", TurnCounter);
+	return TextFormat("Adds a buff boosting attack by %03.00f% for %i turns", (float) AttackBoost, TurnCounter);
 }
 
 bool BuffAdrenaline::IsBuff(Context& ctx) {
 	return true;
 }
 
-StatusEffectInstance* BuffElemental::GetInstance(Context& ctx) { return nullptr; }
+StatusEffectInstance* BuffElemental::GetInstance (Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
+}
 
 void BuffElemental::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
 	chosenType = GetRandomValue(0, 4);
+	ResistanceBoost += ResistanceBoost * ctx.GameState->CurrentRun.ElapsedTime;
 	switch(chosenType) {
 		case 1:
-			character.ElectricResistance += resistanceBoost;
+			character.ElectricResistance += ResistanceBoost;
 		case 2:
-			character.WaterResistance += resistanceBoost;
+			character.WaterResistance += ResistanceBoost;
 		case 3:
-			character.WindResistance += resistanceBoost;
+			character.WindResistance += ResistanceBoost;
 		case 4:
-			character.FireResistance += resistanceBoost;
+			character.FireResistance += ResistanceBoost;
 	}
 }
 void BuffElemental::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {
@@ -119,13 +128,27 @@ Sprite* BuffElemental::GetSprite(Context& ctx, const Component::Options& options
 	return new Sprite(ctx, SpriteName::ElementalShield, options);
 }
 std::string BuffElemental::Description(Context& ctx) {
-	return TextFormat("Adds a buff boosting resistance against the elements", TurnCounter);
+	switch(chosenType) {
+		case 1:
+			return TextFormat("Adds a buff boosting Electric resistance by %03.00f% for %i turns.", (float) ResistanceBoost, TurnCounter);
+		case 2:
+			return TextFormat("Adds a buff boosting Water resistance by %03.00f% for %i turns.", (float) ResistanceBoost, TurnCounter);
+		case 3:
+			return TextFormat("Adds a buff boosting Wind resistance by %03.00f% for %i turns.", (float) ResistanceBoost, TurnCounter);
+		case 4:
+			return TextFormat("Adds a buff boosting Fire resistance by %03.00f% for %i turns.", (float) ResistanceBoost, TurnCounter);
+	}
+	return TextFormat("");
 }
 bool BuffElemental::IsBuff(Context& ctx) { return true; }
 
-StatusEffectInstance* DebuffPoison::GetInstance(Context& ctx) { return nullptr; }
+StatusEffectInstance* DebuffPoison::GetInstance (Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
+}
+
 void DebuffPoison::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
-	character.Parent.CurrentHealth -= poisonDmg;
+	PoisonDmg += (int) ctx.GameState->CurrentRun.ElapsedTime * PoisonDmg;
+	character.Parent.CurrentHealth -= PoisonDmg;
 }
 void DebuffPoison::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {}
 void DebuffPoison::PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {}
@@ -134,13 +157,17 @@ Sprite* DebuffPoison::GetSprite(Context& ctx, const Component::Options& options)
 	return new Sprite(ctx, SpriteName::Poison, options);
 }
 std::string DebuffPoison::Description(Context& ctx) {
-	return TextFormat("Adds a debuff reducing their health through poison", TurnCounter);
+	return TextFormat("Adds a debuff applying %03.00f% poison damage for %i turns.",(float) PoisonDmg, TurnCounter);
 }
 bool DebuffPoison::IsBuff(Context& ctx) { return false; }
 
-StatusEffectInstance* DebuffBleed::GetInstance(Context& ctx) { return nullptr; }
+StatusEffectInstance* DebuffBleed::GetInstance (Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
+}
+
 void DebuffBleed::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
-	character.Parent.CurrentHealth -= bleedDmg;
+	BleedDmg += (int) ctx.GameState->CurrentRun.ElapsedTime * BleedDmg;
+	character.Parent.CurrentHealth -= BleedDmg;
 }
 void DebuffBleed::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {}
 void DebuffBleed::PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {}
@@ -149,17 +176,24 @@ Sprite* DebuffBleed::GetSprite(Context& ctx, const Component::Options& options) 
 	return new Sprite(ctx, SpriteName::Bleed, options);
 }
 std::string DebuffBleed::Description(Context& ctx) {
-	return TextFormat("Adds a debuff forcing them to bleed away their health for i% turns", TurnCounter);
+	return TextFormat("Adds a debuff bleeding for %03.00f% damage for %i turns.", (float) BleedDmg, TurnCounter);
 }
 bool DebuffBleed::IsBuff(Context& ctx) { return false; }
 
-StatusEffectInstance* DebuffSleep::GetInstance(Context& ctx) { return nullptr; }
+StatusEffectInstance* DebuffSleep::GetInstance (Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
+}
+
 void DebuffSleep::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
 	if (instance.TurnsRemaining > 0) {
 		asleep = true;
 	}
 	else {
 		asleep = false;
+	}
+
+	if (asleep) {
+		// skip turn
 	}
 }
 void DebuffSleep::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {
@@ -177,10 +211,13 @@ std::string DebuffSleep::Description(Context& ctx) {
 }
 bool DebuffSleep::IsBuff(Context& ctx) { return false; }
 
-StatusEffectInstance* DebuffSick::GetInstance(Context& ctx) { return nullptr; }
+StatusEffectInstance* DebuffSick::GetInstance (Context& ctx, Character& target, Character& caster) {
+	return new StatusEffectInstance(*this, target, caster);
+}
 void DebuffSick::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {}
 void DebuffSick::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {
-	character.Parent.CurrentHealth -= character.PhysicalAttack*sickDamage;
+	SickMult = character.PhysicalAttack * SickMult + ctx.GameState->CurrentRun.ElapsedTime * SickMult;
+	character.Parent.CurrentHealth -= (int) SickMult;
 	if (instance.TurnsRemaining > 0) {
 		instance.TurnsRemaining -= 1;
 	}
@@ -191,6 +228,6 @@ Sprite* DebuffSick::GetSprite(Context& ctx, const Component::Options& options) {
 	return new Sprite(ctx, SpriteName::Sick, options);
 }
 std::string DebuffSick::Description(Context& ctx) {
-	return TextFormat("Adds a debuff inflicting damage depending on higher attack damage for i% turns", TurnCounter);
+	return TextFormat("Adds a debuff inflicting %03.00f% damage per their physical damage for i% turns", (float) SickMult, TurnCounter);
 }
 bool DebuffSick::IsBuff(Context& ctx) { return false; }

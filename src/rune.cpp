@@ -9,6 +9,7 @@
 #include "context.h"
 #include "state.h"
 #include <iostream>
+#include <vector>
 
 Sprite* getSprite(Context& ctx, RuneAttribute::Target target, const Component::Options& options);
 Sprite* getSprite(Context& ctx, RuneAttribute::AttackType attackType, const Component::Options& options);
@@ -78,61 +79,50 @@ Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
 	AttackType = (RuneAttribute::AttackType)GetRandomValue(0, 1);
 	Element = (RuneAttribute::Element)GetRandomValue(0, 6);
 
-	StatusEffect* LifeSteal = new BuffLifesteal();
-	StatusEffect* Lucky = new BuffLucky();
-	StatusEffect* Adrenaline = new BuffAdrenaline();
-	StatusEffect* Elemental = new BuffElemental();
-	StatusEffect* Poison = new DebuffPoison();
-	StatusEffect* Bleed = new DebuffBleed();
-	StatusEffect* Sleep = new DebuffSleep();
-	StatusEffect* Sick = new DebuffSick();
-
 	int path = GetRandomValue(0,1);
 	if (path == 0) {
 		// Buffs/Debuffs first
-		bool leave = false;
-		for (int i = 0; i < 3; i++) {
-			if (runePoints - bDCost >= 0 || leave) { break; }
+		for (int i = 0; i < 2; i++) {
+			if (runePoints - bDCost >= 0) { break; }
 			auto BDuff = (RuneAttribute::StatusEffect)GetRandomValue(0, 15);
 			if (BDuff == RuneAttribute::StatusEffect::NoEffect || (int)BDuff > 8) {
 				break;
 			}
 			switch (BDuff) {
 				case RuneAttribute::Lifesteal:
-					Buffs.push_back(LifeSteal);
-					runePoints -= bDCost;
+					if (Target <= 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 				case RuneAttribute::Lucky:
-					Buffs.push_back(Lucky);
-					runePoints -= bDCost;
+					if (Target <= 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 				case RuneAttribute::Adrenaline:
-					Buffs.push_back(Adrenaline);
-					runePoints -= bDCost;
+					if (Target <= 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 				case RuneAttribute::Elemental:
-					Buffs.push_back(Elemental);
-					runePoints -= bDCost;
+					if (Target <= 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 				case RuneAttribute::Poison:
-					Debuffs.push_back(Poison);
-					runePoints -= bDCost;
+					if (Target > 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 				case RuneAttribute::Bleed:
-					Debuffs.push_back(Bleed);
-					runePoints -= bDCost;
+					if (Target > 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 				case RuneAttribute::Sleep:
-					Debuffs.push_back(Sleep);
-					runePoints -= bDCost;
+					if (Target > 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 				case RuneAttribute::Sick:
-					Debuffs.push_back(Sick);
-					runePoints -= bDCost;
+					if (Target > 1) { runePoints += bDCost; }
+					else { runePoints -= bDCost; }
 					break;
 			}
 		}
-
 		auto critDet = (double)GetRandomValue(1, .5 * runePoints);
 		CritChance = critDet;
 		CritMultiplier = (.5 * runePoints) - critDet;
@@ -143,9 +133,8 @@ Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
 		CritMultiplier = (.5 * runePoints) - critDet;
 		runePoints -= critDet;
 
-		bool leave = false;
-		for (int i = 0; i < 3; i++) {
-			if (runePoints - bDCost >= 0 || leave) {
+		for (int i = 0; i < 2; i++) {
+			if (runePoints - bDCost >= 0) {
 				break;
 			}
 			auto BDuff = (RuneAttribute::StatusEffect)GetRandomValue(0, 15);
@@ -153,38 +142,93 @@ Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
 				break;
 			}
 			switch (BDuff) {
-				case RuneAttribute::Lifesteal:
-					Buffs.push_back(LifeSteal);
-					runePoints -= bDCost;
+				case RuneAttribute::Lifesteal: {
+					double strength = GetRandomValue(1, 4);
+					auto lifeSteal = new BuffLifesteal(strength);
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), lifeSteal);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(lifeSteal);
+						if (Target <= 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
-				case RuneAttribute::Lucky:
-					Buffs.push_back(Lucky);
-					runePoints -= bDCost;
+				}
+				case RuneAttribute::Lucky: {
+					double critChance = GetRandomValue(20, 50);
+					auto lucky = new BuffLucky(critChance);
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), lucky);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(lucky);
+						if (Target <= 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
-				case RuneAttribute::Adrenaline:
-					Buffs.push_back(Adrenaline);
-					runePoints -= bDCost;
+				}
+				case RuneAttribute::Adrenaline: {
+					double attackMult = GetRandomValue(1, 4);
+					auto adrenaline = new BuffAdrenaline(attackMult);
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), adrenaline);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(adrenaline);
+						if (Target <= 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
-				case RuneAttribute::Elemental:
-					Buffs.push_back(Elemental);
-					runePoints -= bDCost;
+				}
+				case RuneAttribute::Elemental: {
+					double resistance = GetRandomValue(90, 110);
+					auto elemental = new BuffElemental(resistance);
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), elemental);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(elemental);
+						if (Target <= 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
-				case RuneAttribute::Poison:
-					Debuffs.push_back(Poison);
-					runePoints -= bDCost;
+				}
+				case RuneAttribute::Poison: {
+					double poisonDmg = GetRandomValue(5, 15);
+					auto poison = new DebuffPoison(poisonDmg);
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), poison);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(poison);
+						if (Target > 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
-				case RuneAttribute::Bleed:
-					Debuffs.push_back(Bleed);
-					runePoints -= bDCost;
+				}
+				case RuneAttribute::Bleed: {
+					double bleedDmg = GetRandomValue(20, 30);
+					auto bleed = new DebuffBleed(bleedDmg);
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), bleed);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(bleed);
+						if (Target > 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
-				case RuneAttribute::Sleep:
-					Debuffs.push_back(Sleep);
-					runePoints -= bDCost;
+				}
+				case RuneAttribute::Sleep: {
+					auto sleep = new DebuffSleep();
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), sleep);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(sleep);
+						if (Target > 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
-				case RuneAttribute::Sick:
-					Debuffs.push_back(Sick);
-					runePoints -= bDCost;
+				}
+				case RuneAttribute::Sick: {
+					double sickMult = GetRandomValue(10, 30);
+					auto sick = new DebuffSick(sickMult);
+					auto alrAdded = std::find(this->Buffs.begin(), this->Buffs.end(), sick);
+					if (alrAdded == this->Buffs.end()) {
+						this->Buffs.push_back(sick);
+						if (Target > 1) { runePoints += bDCost; }
+						else { runePoints -= bDCost; }
+					}
 					break;
+				}
 			}
 		}
 	}
