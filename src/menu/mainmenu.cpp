@@ -6,9 +6,11 @@
 
 #include "gui/system.h"
 #include "gui/menus.h"
+#include "state.h"
 
 void mainMenuPlayPressed(Context& ctx, Component& component) {
-	ctx.Menu.Set(Context::Menus::Index::RuneMenu);
+	ctx.GameState->NewGame();
+	ctx.GameState->NextRoom();
 }
 
 Component* Menu::CreateMainMenu(Context& ctx) {

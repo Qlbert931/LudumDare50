@@ -6,14 +6,31 @@
 
 #include "gui/system.h"
 #include "gui/menus.h"
+#include "state.h"
 #include "rune.h"
 #include "enemy.h"
+#include "statuseffect.h"
 
 int tempProgressBar = 190;
 int tempProgressBarCurrent = 100;
 
+void Menu::CombatMenuComponent::Update(Context& ctx) {
+	Component::Update(ctx);
+	auto ProgressLabel = (Label*)(this->Child(0)->Child(0));
+	auto ElapsedLabel = (Label*)(this->Child(0)->Child(2));
+	ProgressLabel->SetText(ctx, TextFormat("Progress: %s", ctx.GameState->CurrentRun.ProgressTimeString().c_str()));
+	ElapsedLabel->SetText(ctx, TextFormat("Current: %s", ctx.GameState->CurrentRun.ElapsedTimeString().c_str()));
+}
+
+void attackingRune0(Context& ctx, Component& component) {}
+void attackingRune1(Context& ctx, Component& component) {}
+void attackingRune2(Context& ctx, Component& component) {}
+void attackingRune3(Context& ctx, Component& component) {}
+void attackingRune4(Context& ctx, Component& component) {}
+void attackingRune5(Context& ctx, Component& component) {}
+
 Component* Menu::CreateCombatMenu(Context& ctx) {
-	auto panel = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
+	auto panel = new Menu::CombatMenuComponent(ctx, {.WidthScale = 1, .HeightScale = 1});
 	auto timeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .05});
 	auto enemyRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .39});
 	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &tempProgressBar, &tempProgressBarCurrent);
@@ -33,7 +50,20 @@ Component* Menu::CreateCombatMenu(Context& ctx) {
 
 	// Enemy Row
 	auto enemy = new Enemy(ctx, 10, false);
+	//TODO: insert spaces if there are only one/two/three enemies
+	*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
 	*enemyRow += enemy->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+	*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
+	auto statusEffectsColumn = new VerticalPanel(ctx, {.WidthScale = .05, .HeightScale = 1});
+	*enemyRow += statusEffectsColumn;
+	auto statusEffectOption = Component::Options{.WidthScale = 1, .HeightScale = .15};
+	for (StatusEffectInstance* statusEffect : ctx.GameState->CurrentBattle.StatusEffects) {
+		if (statusEffect->IsCaster(ctx, ctx.GameState->CurrentRun.PlayerCharacter) && statusEffect->IsBuff(ctx)) {
+			*statusEffectsColumn += statusEffect->StatusEffect.GetSprite(ctx, statusEffectOption);
+		} else if (statusEffect->IsTarget(ctx, ctx.GameState->CurrentRun.PlayerCharacter) && !statusEffect->IsBuff(ctx)) {
+			*statusEffectsColumn += statusEffect->StatusEffect.GetSprite(ctx, statusEffectOption);
+		}
+	}
 
 	// Experience Bar
 	auto innerHealthBar = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
@@ -59,12 +89,12 @@ Component* Menu::CreateCombatMenu(Context& ctx) {
 		.HeightScale = .48,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover};
-	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol1 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].GenerateComponent(ctx, runeOptions.WithOnClick(attackingRune0));
+	*runeCol1 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].GenerateComponent(ctx, runeOptions.WithOnClick(attackingRune1));
+	*runeCol2 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].GenerateComponent(ctx, runeOptions.WithOnClick(attackingRune2));
+	*runeCol2 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].GenerateComponent(ctx, runeOptions.WithOnClick(attackingRune3));
+	*runeCol3 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].GenerateComponent(ctx, runeOptions.WithOnClick(attackingRune4));
+	*runeCol3 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].GenerateComponent(ctx, runeOptions.WithOnClick(attackingRune5));
 
 	return panel;
 }

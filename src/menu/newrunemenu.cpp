@@ -7,12 +7,62 @@
 #include "gui/system.h"
 #include "gui/menus.h"
 #include "rune.h"
+#include "state.h"
 
 int tempProgressBarMax2 = 83;
 int tempProgressBarCurrent2 = 22;
 
+void Menu::NewRuneMenuComponent::Update(Context& ctx) {
+	Component::Update(ctx);
+	auto ProgressLabel = (Label*)(this->Child(0)->Child(0));
+	auto ElapsedLabel = (Label*)(this->Child(0)->Child(2));
+	ProgressLabel->SetText(ctx, TextFormat("Progress: %s", ctx.GameState->CurrentRun.ProgressTimeString().c_str()));
+	ElapsedLabel->SetText(ctx, TextFormat("Current: %s", ctx.GameState->CurrentRun.ElapsedTimeString().c_str()));
+}
+
+void replacingRune0(Context& ctx, Component& component) {
+	ctx.GameState->CurrentRun.ReplacingIndex = (ctx.GameState->CurrentRun.ReplacingIndex == 0) ? -1 : 0;
+	ctx.Menu.ReloadNewRuneMenu(ctx);
+}
+
+void replacingRune1(Context& ctx, Component& component) {
+	ctx.GameState->CurrentRun.ReplacingIndex = (ctx.GameState->CurrentRun.ReplacingIndex == 1) ? -1 : 1;
+	ctx.Menu.ReloadNewRuneMenu(ctx);
+}
+
+void replacingRune2(Context& ctx, Component& component) {
+	ctx.GameState->CurrentRun.ReplacingIndex = (ctx.GameState->CurrentRun.ReplacingIndex == 2) ? -1 : 2;
+	ctx.Menu.ReloadNewRuneMenu(ctx);
+}
+
+void replacingRune3(Context& ctx, Component& component) {
+	ctx.GameState->CurrentRun.ReplacingIndex = (ctx.GameState->CurrentRun.ReplacingIndex == 3) ? -1 : 3;
+	ctx.Menu.ReloadNewRuneMenu(ctx);
+}
+
+void replacingRune4(Context& ctx, Component& component) {
+	ctx.GameState->CurrentRun.ReplacingIndex = (ctx.GameState->CurrentRun.ReplacingIndex == 4) ? -1 : 4;
+	ctx.Menu.ReloadNewRuneMenu(ctx);
+}
+
+void replacingRune5(Context& ctx, Component& component) {
+	ctx.GameState->CurrentRun.ReplacingIndex = (ctx.GameState->CurrentRun.ReplacingIndex == 5) ? -1 : 5;
+	ctx.Menu.ReloadNewRuneMenu(ctx);
+}
+
+void newRuneCancelClick(Context& ctx, Component& component) {
+	ctx.GameState->CurrentRun.ReplacingIndex = -1;
+	ctx.GameState->NextRoom();
+}
+
+void newRuneConfirmClick(Context& ctx, Component& component) {
+	if (ctx.GameState->CurrentRun.ReplacingIndex != -1) {
+		ctx.GameState->NextRoom();
+	}
+}
+
 Component* Menu::CreateNewRuneMenu(Context& ctx) {
-	auto panel = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
+	auto panel = new Menu::NewRuneMenuComponent(ctx, {.WidthScale = 1, .HeightScale = 1});
 	auto timeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .05});
 	auto newRuneRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .39});
 	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &tempProgressBarMax2, &tempProgressBarCurrent2);
@@ -32,23 +82,23 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 
 	// New Rune Row
 	auto runeButtons = Component::Options{.WidthScale = .2, .HeightScale = .2, .DefaultColor = ctx.Colors.Button, .HoverColor = ctx.Colors.ButtonHover};
-	*newRuneRow += (new Button(ctx, runeButtons))->AddChild(new Label(ctx, "Cancel", {.WidthScale = .8, .HeightScale = .8, .DefaultColor = WHITE}));
-	*newRuneRow += Rune(ctx, RuneAttribute::Rare).GenerateComponent(ctx, {
+	*newRuneRow += (new Button(ctx, runeButtons))->AddChild(new Label(ctx, "Cancel", {.WidthScale = .8, .HeightScale = .8, .DefaultColor = WHITE, .OnClick = newRuneCancelClick}));
+	*newRuneRow += ctx.GameState->CurrentRun.AddingRune->GenerateComponent(ctx, {
 		.WidthScale = .5,
 		.HeightScale = .7,
 		.DefaultColor = ctx.Colors.Button});
-	*newRuneRow += (new Button(ctx, runeButtons))->AddChild(new Label(ctx, "Confirm", {.WidthScale = .8, .HeightScale = .8, .DefaultColor = WHITE}));
+	*newRuneRow += (new Button(ctx, runeButtons))->AddChild(new Label(ctx, "Confirm", {.WidthScale = .8, .HeightScale = .8, .DefaultColor = WHITE, .OnClick = newRuneConfirmClick}));
 
 	// Experience Bar
 	auto innerHealthBar = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	*healthBar += innerHealthBar;
-	*innerHealthBar += new Label(ctx, "Health 22/70", {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
+	*innerHealthBar += new Label(ctx, TextFormat("Health %i/%i", ctx.GameState->CurrentRun.PlayerCharacter.CurrentHealth, ctx.GameState->CurrentRun.PlayerCharacter.Health), {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
 	*innerHealthBar += new HorizontalPanel(ctx, {.WidthScale = .85, .HeightScale = 1});
 
 	// Experience Bar
 	auto innerEXPBar = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	*experienceBar += innerEXPBar;
-	*innerEXPBar += new Label(ctx, "Level 22", {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
+	*innerEXPBar += new Label(ctx, TextFormat("Level %i", ctx.GameState->CurrentRun.PlayerCharacter.Level(ctx)), {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
 	*innerEXPBar += new HorizontalPanel(ctx, {.WidthScale = .85, .HeightScale = 1});
 
 	// Rune Row
@@ -63,12 +113,39 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 		.HeightScale = .48,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover};
-	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+
+	auto runeOptions0 = runeOptions.WithOnClick(replacingRune0);
+	auto runeOptions1 = runeOptions.WithOnClick(replacingRune1);
+	auto runeOptions2 = runeOptions.WithOnClick(replacingRune2);
+	auto runeOptions3 = runeOptions.WithOnClick(replacingRune3);
+	auto runeOptions4 = runeOptions.WithOnClick(replacingRune4);
+	auto runeOptions5 = runeOptions.WithOnClick(replacingRune5);
+	switch (ctx.GameState->CurrentRun.ReplacingIndex) {
+		case 0:
+			runeOptions0 = runeOptions0.WithDefaultColor(ctx.Colors.ButtonHover);
+			break;
+		case 1:
+			runeOptions1 = runeOptions1.WithDefaultColor(ctx.Colors.ButtonHover);
+			break;
+		case 2:
+			runeOptions2 = runeOptions2.WithDefaultColor(ctx.Colors.ButtonHover);
+			break;
+		case 3:
+			runeOptions3 = runeOptions3.WithDefaultColor(ctx.Colors.ButtonHover);
+			break;
+		case 4:
+			runeOptions4 = runeOptions4.WithDefaultColor(ctx.Colors.ButtonHover);
+			break;
+		case 5:
+			runeOptions5 = runeOptions5.WithDefaultColor(ctx.Colors.ButtonHover);
+			break;
+	}
+	*runeCol1 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].GenerateComponent(ctx, runeOptions0);
+	*runeCol1 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].GenerateComponent(ctx, runeOptions1);
+	*runeCol2 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].GenerateComponent(ctx, runeOptions2);
+	*runeCol2 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].GenerateComponent(ctx, runeOptions3);
+	*runeCol3 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].GenerateComponent(ctx, runeOptions4);
+	*runeCol3 += ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].GenerateComponent(ctx, runeOptions5);
 
 	return panel;
 }
