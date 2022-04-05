@@ -22,12 +22,29 @@ void Menu::CombatMenuComponent::Update(Context& ctx) {
 	ElapsedLabel->SetText(ctx, TextFormat("Current: %s", ctx.GameState->CurrentRun.ElapsedTimeString().c_str()));
 }
 
-void attackingRune0(Context& ctx, Component& component) {}
-void attackingRune1(Context& ctx, Component& component) {}
-void attackingRune2(Context& ctx, Component& component) {}
-void attackingRune3(Context& ctx, Component& component) {}
-void attackingRune4(Context& ctx, Component& component) {}
-void attackingRune5(Context& ctx, Component& component) {}
+void attackingRune0(Context& ctx, Component& component) {
+	ctx.GameState->Attack(0);
+}
+
+void attackingRune1(Context& ctx, Component& component) {
+	ctx.GameState->Attack(1);
+}
+
+void attackingRune2(Context& ctx, Component& component) {
+	ctx.GameState->Attack(2);
+}
+
+void attackingRune3(Context& ctx, Component& component) {
+	ctx.GameState->Attack(3);
+}
+
+void attackingRune4(Context& ctx, Component& component) {
+	ctx.GameState->Attack(4);
+}
+
+void attackingRune5(Context& ctx, Component& component) {
+	ctx.GameState->Attack(5);
+}
 
 Component* Menu::CreateCombatMenu(Context& ctx) {
 	auto panel = new Menu::CombatMenuComponent(ctx, {.WidthScale = 1, .HeightScale = 1});
@@ -49,11 +66,22 @@ Component* Menu::CreateCombatMenu(Context& ctx) {
 	*timeRow += new Label(ctx, "Current: 11m 17.43s", {.WidthScale = .2, .HeightScale = .98, .DefaultColor = WHITE});
 
 	// Enemy Row
-	auto enemy = new Enemy(ctx, 10, false);
-	//TODO: insert spaces if there are only one/two/three enemies
-	*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
-	*enemyRow += enemy->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
-	*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
+	if (ctx.GameState->CurrentBattle.Enemies.size() == 1) {
+		*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
+		*enemyRow += ctx.GameState->CurrentBattle.Enemies.at(0)->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+		*enemyRow += new VerticalPanel(ctx, {.WidthScale = .3, .HeightScale = 1});
+	} else if (ctx.GameState->CurrentBattle.Enemies.size() == 2) {
+		*enemyRow += new VerticalPanel(ctx, {.WidthScale = .1, .HeightScale = 1});
+		*enemyRow += ctx.GameState->CurrentBattle.Enemies.at(0)->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+		*enemyRow += new VerticalPanel(ctx, {.WidthScale = .1, .HeightScale = 1});
+		*enemyRow += ctx.GameState->CurrentBattle.Enemies.at(1)->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+		*enemyRow += new VerticalPanel(ctx, {.WidthScale = .1, .HeightScale = 1});
+	} else if (ctx.GameState->CurrentBattle.Enemies.size() == 3) {
+		*enemyRow += ctx.GameState->CurrentBattle.Enemies.at(0)->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+		*enemyRow += ctx.GameState->CurrentBattle.Enemies.at(1)->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+		*enemyRow += ctx.GameState->CurrentBattle.Enemies.at(2)->GenerateComponent(ctx, {.WidthScale = .3, .HeightScale = .9, .DefaultColor = ctx.Colors.EnemyBackground});
+	}
+
 	auto statusEffectsColumn = new VerticalPanel(ctx, {.WidthScale = .05, .HeightScale = 1});
 	*enemyRow += statusEffectsColumn;
 	auto statusEffectOption = Component::Options{.WidthScale = 1, .HeightScale = .15};

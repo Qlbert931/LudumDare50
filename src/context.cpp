@@ -8,6 +8,7 @@
 #include "gui/menus.h"
 #include "state.h"
 #include "cmath"
+#include "statuseffect.h"
 
 Context::Context() {
 	GameState = new State(*this);
