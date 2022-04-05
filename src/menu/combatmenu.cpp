@@ -59,12 +59,12 @@ Component* Menu::CreateCombatMenu(Context& ctx) {
 		.HeightScale = .48,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover};
-	*runeCol1 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol1 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
 
 	return panel;
 }

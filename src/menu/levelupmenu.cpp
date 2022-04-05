@@ -108,12 +108,12 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	*windResStat += new Label(ctx, "10%", statInputStepperOptions);
 
 	// Runes Column
-	tempRune1 = new Rune(ctx, true);
-	tempRune2 = new Rune(ctx, true);
-	tempRune3 = new Rune(ctx, true);
-	tempRune4 = new Rune(ctx, true);
-	tempRune5 = new Rune(ctx, true);
-	tempRune6 = new Rune(ctx, true);
+	tempRune1 = new Rune(ctx, RuneAttribute::Common);
+	tempRune2 = new Rune(ctx, RuneAttribute::Common);
+	tempRune3 = new Rune(ctx, RuneAttribute::Common);
+	tempRune4 = new Rune(ctx, RuneAttribute::Common);
+	tempRune5 = new Rune(ctx, RuneAttribute::Common);
+	tempRune6 = new Rune(ctx, RuneAttribute::Common);
 	auto runePanel = new VerticalPanel(ctx, {.WidthScale = .5, .HeightScale = 1});
 	*statsRow += runePanel;
 

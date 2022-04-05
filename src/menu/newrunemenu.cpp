@@ -33,7 +33,7 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 	// New Rune Row
 	auto runeButtons = Component::Options{.WidthScale = .2, .HeightScale = .2, .DefaultColor = ctx.Colors.Button, .HoverColor = ctx.Colors.ButtonHover};
 	*newRuneRow += (new Button(ctx, runeButtons))->AddChild(new Label(ctx, "Cancel", {.WidthScale = .8, .HeightScale = .8, .DefaultColor = WHITE}));
-	*newRuneRow += Rune(ctx, true).GenerateComponent(ctx, {
+	*newRuneRow += Rune(ctx, RuneAttribute::Rare).GenerateComponent(ctx, {
 		.WidthScale = .5,
 		.HeightScale = .7,
 		.DefaultColor = ctx.Colors.Button});
@@ -63,12 +63,12 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 		.HeightScale = .48,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover};
-	*runeCol1 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol1 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol2 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	*runeCol3 += Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol1 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol2 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	*runeCol3 += Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
 
 	return panel;
 }

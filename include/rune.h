@@ -40,6 +40,25 @@ namespace RuneAttribute {
 		Omni = 5,
 		Pure = 6
 	};
+
+	enum BuffDebuff {
+		LifeSteal = 0,
+		Lucky = 1,
+		Adrenaline = 2,
+		Elemental = 3,
+		Poison = 4,
+		Bleed = 5,
+		Sleep = 6,
+		Sick = 7,
+		None1 = 8,
+		None2 = 9,
+		None3 = 10,
+		None4 = 11,
+		None5 = 12,
+		None6 = 13,
+		None7 = 14,
+		None8 = 15
+	};
 }
 
 class StatusEffect;
@@ -47,7 +66,7 @@ class StatusEffect;
 class Rune {
 public:
 	Rune();
-	Rune(Context& ctx, bool forPlayer);
+	Rune(Context& ctx, RuneAttribute::Rarity rarity);
 	~Rune();
 	Component* GenerateComponent(Context& ctx, const Component::Options& options);
 	Color GetRarityColor(Context& ctx);
@@ -67,11 +86,13 @@ public:
 	RuneAttribute::Rarity Rarity;
 	RuneAttribute::AttackType AttackType;
 	RuneAttribute::Element Element;
+	RuneAttribute::BuffDebuff BDuff;
 	double FlatDamage;
 	std::vector<StatusEffect*> Buffs;
 	std::vector<StatusEffect*> Debuffs;
 	double CritChance;
 	double CritMultiplier;
 };
+
 
 #endif //RUNE_H
