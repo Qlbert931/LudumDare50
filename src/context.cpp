@@ -24,7 +24,7 @@ Context::~Context() {
 
 void Context::Initialize() {
 	this->Menu.initialize(*this);
-	this->GameState->Reset();
+	this->GameState->NewGame();
 }
 
 void Context::Update() {
@@ -51,6 +51,9 @@ void Context::Update() {
 	if (Menu.currentMenu >= 0) {
 		Menu.menus.at(Menu.currentMenu)->Update(*this);
 	}
+
+	// Time
+	GameState->CurrentRun.ElapsedTime += GetFrameTime();
 }
 
 void Context::Draw() {
@@ -69,4 +72,28 @@ void Context::Menus::initialize(Context& ctx) {
 	menus.push_back(Menu::CreateLevelUpMenu(ctx));
 	menus.push_back(Menu::CreatePauseMenu(ctx));
 	currentMenu = Menus::MainMenu;
+}
+
+void Context::Menus::ReloadGameOverMenu(Context& ctx) {
+	Component* original = menus.at(2);
+	delete(original);
+	menus[2] = Menu::CreateGameOverMenu(ctx);
+}
+
+void Context::Menus::ReloadCombatMenu(Context& ctx) {
+	Component* original = menus.at(3);
+	delete(original);
+	menus[3] = Menu::CreateCombatMenu(ctx);
+}
+
+void Context::Menus::ReloadNewRuneMenu(Context& ctx) {
+	Component* original = menus.at(4);
+	delete(original);
+	menus[4] = Menu::CreateNewRuneMenu(ctx);
+}
+
+void Context::Menus::ReloadLevelUpMenu(Context& ctx) {
+	Component* original = menus.at(5);
+	delete(original);
+	menus[5] = Menu::CreateLevelUpMenu(ctx);
 }

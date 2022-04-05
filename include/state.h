@@ -32,6 +32,21 @@ public:
 		double ProgressTime = 0;
 		double ElapsedTime = 0;
 		Player PlayerCharacter;
+		Rune* AddingRune = nullptr;
+		int ReplacingIndex;
+
+		std::string ProgressTimeString() {
+			int hours = ProgressTime / 3600;
+			int minutes = (int)(ProgressTime / 60) % 60;
+			float seconds = (float)(ProgressTime - (double)((hours * 3600) + (minutes * 60)));
+			return TextFormat("%ih %02im %02.02fs", hours, minutes, seconds);
+		}
+		std::string ElapsedTimeString() {
+			int hours = ElapsedTime / 3600;
+			int minutes = (int)(ElapsedTime / 60) % 60;
+			float seconds = (float)(ElapsedTime - (double)((hours * 3600) + (minutes * 60)));
+			return TextFormat("%ih %02im %02.02fs", hours, minutes, seconds);
+		}
 	} CurrentRun;
 
 	struct {
@@ -49,9 +64,8 @@ public:
 		double NextRuneLegendary = 0;
 	} ChanceProgress;
 
-	void Reset();
+	void NewGame();
 	void NextRoom();
-	void NewEnemies();
 	void GameOver();
 
 private:

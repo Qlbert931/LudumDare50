@@ -7,30 +7,105 @@
 #include "gui/system.h"
 #include "gui/menus.h"
 #include "rune.h"
+#include "state.h"
 
-int tempMinValue = 0;
-int tempMaxValue = 50;
-int tempHealth = 20;
-int tempPhysicalArmor = 8;
-int tempSpecialArmor = 10;
-int tempPhysicalAttack = 35;
-int tempSpecialAttack = 2;
-int tempSpeed = 19;
-int tempEvasion = 15;
+int startHealth = 0;
+int maxHealth = 0;
+int startPArmor = 0;
+int maxPArmor = 0;
+int startSArmor = 0;
+int maxSArmor = 0;
+int startPAttack = 0;
+int maxPAttack = 0;
+int startSAttack = 0;
+int maxSAttack = 0;
+int startSpeed = 0;
+int maxSpeed = 0;
+int startEvasion = 0;
+int maxEvasion = 0;
 
-Rune* tempRune1;
-Rune* tempRune2;
-Rune* tempRune3;
-Rune* tempRune4;
-Rune* tempRune5;
-Rune* tempRune6;
+int remainingPoints = 5;
+int rune0Min = 0;
+int rune1Min = 0;
+int rune2Min = 0;
+int rune3Min = 0;
+int rune4Min = 0;
+int rune5Min = 0;
+int rune0Max = 100;
+int rune1Max = 100;
+int rune2Max = 100;
+int rune3Max = 100;
+int rune4Max = 100;
+int rune5Max = 100;
+
+void Menu::LevelUpMenuComponent::RoomLoad(Context& ctx) {
+	remainingPoints = 5;
+	startHealth = ctx.GameState->CurrentRun.PlayerCharacter.Health;
+	startPArmor = ctx.GameState->CurrentRun.PlayerCharacter.PhysicalArmor;
+	startSArmor = ctx.GameState->CurrentRun.PlayerCharacter.SpecialArmor;
+	startPAttack = ctx.GameState->CurrentRun.PlayerCharacter.PhysicalAttack;
+	startSAttack = ctx.GameState->CurrentRun.PlayerCharacter.SpecialAttack;
+	startSpeed = ctx.GameState->CurrentRun.PlayerCharacter.Speed;
+	startEvasion = ctx.GameState->CurrentRun.PlayerCharacter.Evasion;
+	rune0Min = ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].AdditionalLevel;
+	rune1Min = ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].AdditionalLevel;
+	rune2Min = ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].AdditionalLevel;
+	rune3Min = ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].AdditionalLevel;
+	rune4Min = ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].AdditionalLevel;
+	rune5Min = ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].AdditionalLevel;
+}
+
+void Menu::LevelUpMenuComponent::Update(Context& ctx) {
+	Component::Update(ctx);
+	auto ProgressLabel = (Label*)(this->Child(0)->Child(0));
+	auto ElapsedLabel = (Label*)(this->Child(0)->Child(2));
+	auto PointsRemainingLabel = (Label*)(this->Child(1));
+	ProgressLabel->SetText(ctx, TextFormat("Progress: %s", ctx.GameState->CurrentRun.ProgressTimeString().c_str()));
+	ElapsedLabel->SetText(ctx, TextFormat("Current: %s", ctx.GameState->CurrentRun.ElapsedTimeString().c_str()));
+	PointsRemainingLabel->SetText(ctx, TextFormat("Points Remaining: %i/5", remainingPoints));
+
+	remainingPoints = 5;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Health - startHealth;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.PhysicalArmor - startPArmor;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.SpecialArmor - startSArmor;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.PhysicalAttack - startPAttack;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.SpecialAttack - startSAttack;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Speed - startSpeed;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Evasion - startEvasion;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].AdditionalLevel - rune0Min;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].AdditionalLevel - rune1Min;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].AdditionalLevel - rune2Min;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].AdditionalLevel - rune3Min;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].AdditionalLevel - rune4Min;
+	remainingPoints -= ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].AdditionalLevel - rune5Min;
+
+	maxHealth = ctx.GameState->CurrentRun.PlayerCharacter.Health + remainingPoints;
+	maxPArmor = ctx.GameState->CurrentRun.PlayerCharacter.PhysicalArmor + remainingPoints;
+	maxSArmor = ctx.GameState->CurrentRun.PlayerCharacter.SpecialArmor + remainingPoints;
+	maxPAttack = ctx.GameState->CurrentRun.PlayerCharacter.PhysicalAttack + remainingPoints;
+	maxSAttack = ctx.GameState->CurrentRun.PlayerCharacter.SpecialAttack + remainingPoints;
+	maxSpeed = ctx.GameState->CurrentRun.PlayerCharacter.Speed + remainingPoints;
+	maxEvasion = ctx.GameState->CurrentRun.PlayerCharacter.Evasion + remainingPoints;
+	rune0Max = ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].AdditionalLevel + remainingPoints;
+	rune1Max = ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].AdditionalLevel + remainingPoints;
+	rune2Max = ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].AdditionalLevel + remainingPoints;
+	rune3Max = ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].AdditionalLevel + remainingPoints;
+	rune4Max = ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].AdditionalLevel + remainingPoints;
+	rune5Max = ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].AdditionalLevel + remainingPoints;
+}
+
+void confirmClicked(Context& ctx, Component& component) {
+	if (remainingPoints == 0) {
+		ctx.Menu.Set(Context::Menus::CombatMenu);
+	}
+}
 
 Component* Menu::CreateLevelUpMenu(Context& ctx) {
-	auto panel = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
+	auto panel = new LevelUpMenuComponent(ctx, {.WidthScale = 1, .HeightScale = 1});
 	auto timeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .05});
 	auto pointsRemainingRow = new Label(ctx, "Points Remaining: 2/5", {.WidthScale = .2, .HeightScale = .05, .DefaultColor = WHITE});
 	auto statsRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .85});
-	auto confirmRow = (new Button(ctx, {.WidthScale = .2, .HeightScale = .05, .DefaultColor = ctx.Colors.Button, .HoverColor = ctx.Colors.ButtonHover}))->
+	auto confirmRow = (new Button(ctx, {.WidthScale = .2, .HeightScale = .05, .DefaultColor = ctx.Colors.Button, .HoverColor = ctx.Colors.ButtonHover, .OnClick = confirmClicked}))->
 		AddChild(new Label(ctx, "Confirm", {.WidthScale = 7, .HeightScale = .7, .DefaultColor = WHITE}));
 	*panel += timeRow;
 	*panel += pointsRemainingRow;
@@ -55,37 +130,37 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	*statPanel += healthStat;
 	*healthStat += new Label(ctx, "Health", statLabelOptions);
 	*healthStat += new Sprite(ctx, SpriteName::Health, statSpriteOptions);
-	*healthStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempHealth);
+	*healthStat += new InputStepper(ctx, statInputStepperOptions, &startHealth, &maxHealth, &ctx.GameState->CurrentRun.PlayerCharacter.Health);
 	auto physicalArmorStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += physicalArmorStat;
 	*physicalArmorStat += new Label(ctx, "Physical Armor", statLabelOptions);
 	*physicalArmorStat += new Sprite(ctx, SpriteName::PhysicalArmor, statSpriteOptions);
-	*physicalArmorStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempPhysicalArmor);
+	*physicalArmorStat += new InputStepper(ctx, statInputStepperOptions, &startPArmor, &maxPArmor, &ctx.GameState->CurrentRun.PlayerCharacter.PhysicalArmor);
 	auto specialArmorStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += specialArmorStat;
 	*specialArmorStat += new Label(ctx, "Special Armor", statLabelOptions);
 	*specialArmorStat += new Sprite(ctx, SpriteName::SpecialArmor, statSpriteOptions);
-	*specialArmorStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempSpecialArmor);
+	*specialArmorStat += new InputStepper(ctx, statInputStepperOptions, &startSArmor, &maxSArmor, &ctx.GameState->CurrentRun.PlayerCharacter.SpecialArmor);
 	auto physicalAttackStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += physicalAttackStat;
 	*physicalAttackStat += new Label(ctx, "Physical Attack", statLabelOptions);
 	*physicalAttackStat += new Sprite(ctx, SpriteName::PhysicalAttack, statSpriteOptions);
-	*physicalAttackStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempPhysicalAttack);
+	*physicalAttackStat += new InputStepper(ctx, statInputStepperOptions, &startPAttack, &maxPAttack, &ctx.GameState->CurrentRun.PlayerCharacter.PhysicalAttack);
 	auto specialAttackStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += specialAttackStat;
 	*specialAttackStat += new Label(ctx, "Special Attack", statLabelOptions);
 	*specialAttackStat += new Sprite(ctx, SpriteName::SpecialAttack, statSpriteOptions);
-	*specialAttackStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempSpecialAttack);
+	*specialAttackStat += new InputStepper(ctx, statInputStepperOptions, &startSAttack, &maxSAttack, &ctx.GameState->CurrentRun.PlayerCharacter.SpecialAttack);
 	auto speedStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += speedStat;
 	*speedStat += new Label(ctx, "Speed", statLabelOptions);
 	*speedStat += new Sprite(ctx, SpriteName::Speed, statSpriteOptions);
-	*speedStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempSpeed);
+	*speedStat += new InputStepper(ctx, statInputStepperOptions, &startSpeed, &maxSpeed, &ctx.GameState->CurrentRun.PlayerCharacter.Speed);
 	auto evasionStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += evasionStat;
 	*evasionStat += new Label(ctx, "Evasion", statLabelOptions);
 	*evasionStat += new Sprite(ctx, SpriteName::Evasion, statSpriteOptions);
-	*evasionStat += new InputStepper(ctx, statInputStepperOptions, &tempMinValue, &tempMaxValue, &tempEvasion);
+	*evasionStat += new InputStepper(ctx, statInputStepperOptions, &startEvasion, &maxEvasion, &ctx.GameState->CurrentRun.PlayerCharacter.Evasion);
 	auto fireResStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += fireResStat;
 	*fireResStat += new Label(ctx, "Fire Resistance", statLabelOptions);
@@ -108,12 +183,6 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	*windResStat += new Label(ctx, "10%", statInputStepperOptions);
 
 	// Runes Column
-	tempRune1 = new Rune(ctx, true);
-	tempRune2 = new Rune(ctx, true);
-	tempRune3 = new Rune(ctx, true);
-	tempRune4 = new Rune(ctx, true);
-	tempRune5 = new Rune(ctx, true);
-	tempRune6 = new Rune(ctx, true);
 	auto runePanel = new VerticalPanel(ctx, {.WidthScale = .5, .HeightScale = 1});
 	*statsRow += runePanel;
 
@@ -124,34 +193,34 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 
 	auto rune1Row = new HorizontalPanel(ctx, runeRowOptions);
 	*runePanel += rune1Row;
-	*rune1Row += tempRune1->GetSprite(ctx, runeSpriteOptions);
-	*rune1Row += new Label(ctx, tempRune1->Name, runeLabelOptions.WithDefaultColor(tempRune1->GetRarityColor(ctx)));
-	*rune1Row += new InputStepper(ctx, runeInputStepperOptions, &tempMinValue, &tempMaxValue, &tempRune1->AdditionalLevel);
+	*rune1Row += ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].GetSprite(ctx, runeSpriteOptions);
+	*rune1Row += new Label(ctx, ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].Name, runeLabelOptions.WithDefaultColor(ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].GetRarityColor(ctx)));
+	*rune1Row += new InputStepper(ctx, runeInputStepperOptions, &rune0Min, &rune0Max, &ctx.GameState->CurrentRun.PlayerCharacter.Runes[0].AdditionalLevel);
 	auto rune2Row = new HorizontalPanel(ctx, runeRowOptions);
 	*runePanel += rune2Row;
-	*rune2Row += tempRune2->GetSprite(ctx, runeSpriteOptions);
-	*rune2Row += new Label(ctx, tempRune2->Name, runeLabelOptions.WithDefaultColor(tempRune2->GetRarityColor(ctx)));
-	*rune2Row += new InputStepper(ctx, runeInputStepperOptions, &tempMinValue, &tempMaxValue, &tempRune2->AdditionalLevel);
+	*rune2Row += ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].GetSprite(ctx, runeSpriteOptions);
+	*rune2Row += new Label(ctx, ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].Name, runeLabelOptions.WithDefaultColor(ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].GetRarityColor(ctx)));
+	*rune2Row += new InputStepper(ctx, runeInputStepperOptions, &rune1Min, &rune1Max, &ctx.GameState->CurrentRun.PlayerCharacter.Runes[1].AdditionalLevel);
 	auto rune3Row = new HorizontalPanel(ctx, runeRowOptions);
 	*runePanel += rune3Row;
-	*rune3Row += tempRune3->GetSprite(ctx, runeSpriteOptions);
-	*rune3Row += new Label(ctx, tempRune3->Name, runeLabelOptions.WithDefaultColor(tempRune3->GetRarityColor(ctx)));
-	*rune3Row += new InputStepper(ctx, runeInputStepperOptions, &tempMinValue, &tempMaxValue, &tempRune3->AdditionalLevel);
+	*rune3Row += ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].GetSprite(ctx, runeSpriteOptions);
+	*rune3Row += new Label(ctx, ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].Name, runeLabelOptions.WithDefaultColor(ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].GetRarityColor(ctx)));
+	*rune3Row += new InputStepper(ctx, runeInputStepperOptions, &rune2Min, &rune2Max, &ctx.GameState->CurrentRun.PlayerCharacter.Runes[2].AdditionalLevel);
 	auto rune4Row = new HorizontalPanel(ctx, runeRowOptions);
 	*runePanel += rune4Row;
-	*rune4Row += tempRune4->GetSprite(ctx, runeSpriteOptions);
-	*rune4Row += new Label(ctx, tempRune4->Name, runeLabelOptions.WithDefaultColor(tempRune4->GetRarityColor(ctx)));
-	*rune4Row += new InputStepper(ctx, runeInputStepperOptions, &tempMinValue, &tempMaxValue, &tempRune4->AdditionalLevel);
+	*rune4Row += ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].GetSprite(ctx, runeSpriteOptions);
+	*rune4Row += new Label(ctx, ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].Name, runeLabelOptions.WithDefaultColor(ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].GetRarityColor(ctx)));
+	*rune4Row += new InputStepper(ctx, runeInputStepperOptions, &rune3Min, &rune3Max, &ctx.GameState->CurrentRun.PlayerCharacter.Runes[3].AdditionalLevel);
 	auto rune5Row = new HorizontalPanel(ctx, runeRowOptions);
 	*runePanel += rune5Row;
-	*rune5Row += tempRune5->GetSprite(ctx, runeSpriteOptions);
-	*rune5Row += new Label(ctx, tempRune5->Name, runeLabelOptions.WithDefaultColor(tempRune5->GetRarityColor(ctx)));
-	*rune5Row += new InputStepper(ctx, runeInputStepperOptions, &tempMinValue, &tempMaxValue, &tempRune5->AdditionalLevel);
+	*rune5Row += ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].GetSprite(ctx, runeSpriteOptions);
+	*rune5Row += new Label(ctx, ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].Name, runeLabelOptions.WithDefaultColor(ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].GetRarityColor(ctx)));
+	*rune5Row += new InputStepper(ctx, runeInputStepperOptions, &rune4Min, &rune4Max, &ctx.GameState->CurrentRun.PlayerCharacter.Runes[4].AdditionalLevel);
 	auto rune6Row = new HorizontalPanel(ctx, runeRowOptions);
 	*runePanel += rune6Row;
-	*rune6Row += tempRune6->GetSprite(ctx, runeSpriteOptions);
-	*rune6Row += new Label(ctx, tempRune6->Name, runeLabelOptions.WithDefaultColor(tempRune6->GetRarityColor(ctx)));
-	*rune6Row += new InputStepper(ctx, runeInputStepperOptions, &tempMinValue, &tempMaxValue, &tempRune6->AdditionalLevel);
+	*rune6Row += ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].GetSprite(ctx, runeSpriteOptions);
+	*rune6Row += new Label(ctx, ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].Name, runeLabelOptions.WithDefaultColor(ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].GetRarityColor(ctx)));
+	*rune6Row += new InputStepper(ctx, runeInputStepperOptions, &rune5Min, &rune5Max, &ctx.GameState->CurrentRun.PlayerCharacter.Runes[5].AdditionalLevel);
 
 	return panel;
 }
