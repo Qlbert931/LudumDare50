@@ -27,7 +27,8 @@ public:
 	int X() { return x; }
 	int Y() { return y; }
 	void operator +=(Component* component);
-	Component& operator [](int i) { return *(children->at(i)); }
+	Component* operator [](int i) { return children->at(i); }
+	Component* Child(int i) { return children->at(i); }
 
 	struct Options {
 	public:

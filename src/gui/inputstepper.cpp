@@ -30,12 +30,12 @@ void InputStepper::OnClick(Context& ctx) {
 	if (mouseX <= fifthWidth) {
 		if (*current > *min) {
 			*current -= 1;
-			((Label&)((*this)[0])).SetText(ctx, std::to_string(*current));
+			((Label*)this->Child(0))->SetText(ctx, std::to_string(*current));
 		}
 	} else if (mouseX >= 4 * fifthWidth) {
 		if (*current < *max) {
 			*current += 1;
-			((Label&)((*this)[0])).SetText(ctx, std::to_string(*current));
+			((Label*)this->Child(0))->SetText(ctx, std::to_string(*current));
 		}
 	}
 }

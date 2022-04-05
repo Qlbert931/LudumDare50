@@ -17,6 +17,25 @@ namespace Menu {
 	Component* CreateNewRuneMenu(Context& ctx);
 	Component* CreateLevelUpMenu(Context& ctx);
 	Component* CreatePauseMenu(Context& ctx);
+
+	class CombatMenuComponent : public VerticalPanel {
+	public:
+		CombatMenuComponent(Context& ctx, const Component::Options& options) : VerticalPanel(ctx, options) {}
+		void Update(Context& ctx) override;
+	};
+
+	class NewRuneMenuComponent : public VerticalPanel {
+	public:
+		NewRuneMenuComponent(Context& ctx, const Component::Options& options) : VerticalPanel(ctx, options) {}
+		void Update(Context& ctx) override;
+	};
+
+	class LevelUpMenuComponent : public VerticalPanel {
+	public:
+		LevelUpMenuComponent(Context& ctx, const Component::Options& options) : VerticalPanel(ctx, options) {}
+		void Update(Context& ctx) override;
+		void RoomLoad(Context& ctx);
+	};
 }
 
 #endif //MENUS_H

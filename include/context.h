@@ -36,7 +36,12 @@ public:
 		};
 		void Set(Index menuIndex) { currentMenu = menuIndex; }
 		Index Current() { return currentMenu; }
-		Component& operator [](Index idx) { return *(menus.at(idx)); }
+		Component* operator [](Index idx) { return menus.at(idx); }
+
+		void ReloadGameOverMenu(Context& ctx);
+		void ReloadCombatMenu(Context& ctx);
+		void ReloadNewRuneMenu(Context& ctx);
+		void ReloadLevelUpMenu(Context& ctx);
 
 	private:
 		Index currentMenu = None;
