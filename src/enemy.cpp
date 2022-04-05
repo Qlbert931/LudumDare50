@@ -8,41 +8,57 @@
 #include "state.h"
 #include "statuseffect.h"
 
-Enemy::Enemy(Context& ctx, double currentTime, bool isBoss) {
-	//TODO: generate enemy stats
-	double bossMult = 1;
-
+Enemy::Enemy(Context& ctx, bool isBoss) {
+	//TODO: generate name
 	Name = "Test Name";
-	spriteName = SpriteName::Dragon;
+	spriteName = (SpriteName)GetRandomValue(0, 5);
+	EncounterTime = ctx.GameState->CurrentRun.ElapsedTime;
 	IsBoss = isBoss;
-	if (isBoss) { bossMult = 2.0; }
+	double points = 40 + (EncounterTime * 0.6);
+	if (isBoss) {
+		Name = "Boss " + Name;
+		points *= 1.2;
+	}
 
-	Health = 100 * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
-	CurrentHealth = 5;
+	// Resistances go from -200% to 200% and give or remove 30% points at the extremes
+	double resistance = GetRandomDouble();
+	points *= (((resistance * 0.6) - 0.3) * -1.0) + 1.0;
+	fireResistance = (4 * resistance) - 2;
+	resistance = GetRandomDouble();
+	points *= (((resistance * 0.6) - 0.3) * -1.0) + 1.0;
+	waterResistance = (4 * resistance) - 2;
+	resistance = GetRandomDouble();
+	points *= (((resistance * 0.6) - 0.3) * -1.0) + 1.0;
+	electricResistance = (4 * resistance) - 2;
+	resistance = GetRandomDouble();
+	points *= (((resistance * 0.6) - 0.3) * -1.0) + 1.0;
+	windResistance = (4 * resistance) - 2;
 
-	double attackBalancer = GetRandomValue(0, 1) * bossMult;
+	double pointDelta = (points * 0.5) * GetRandomDouble();
+	points -= pointDelta;
+	Health = 10.0 * pointDelta + 1.0;
+	CurrentHealth = Health;
 
-	PhysicalAttack = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult * attackBalancer;
-	SpecialAttack = (attackBalancer*100 - PhysicalAttack) * bossMult * ctx.GameState->CurrentRun.ElapsedTime;
+	pointDelta = (points * 0.5) * GetRandomDouble();
+	points -= pointDelta;
+	double shift = GetRandomDouble();
+	PhysicalAttack = pointDelta * shift + 1;
+	SpecialAttack = pointDelta * (1 - shift) + 1;
 
-	double armorBalancer = GetRandomValue(0, 1) * bossMult;
+	pointDelta = (points * 0.5) * GetRandomDouble();
+	points -= pointDelta;
+	shift = GetRandomDouble();
+	PhysicalArmor = pointDelta * shift + 1;
+	SpecialArmor = pointDelta * (1 - shift) + 1;
 
-	PhysicalArmor = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult * armorBalancer;
-	SpecialArmor = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult * armorBalancer;;
-	Speed = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
-	EncounterTime = currentTime;
-	fireResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
-	waterResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
-	electricResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
-	windResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
-}
-
-Enemy::~Enemy() {
-	//TODO: is this needed?
+	pointDelta = (points * 0.5) * GetRandomDouble();
+	points -= pointDelta;
+	Speed = pointDelta;
+	BaseDamage = points;
 }
 
 int Enemy::Level(Context& ctx) {
-	return (int)(EncounterTime / 10);
+	return (int)(EncounterTime / 10) + 1;
 }
 
 double Enemy::FireResistance(Context& ctx) {
@@ -63,7 +79,6 @@ double Enemy::WindResistance(Context& ctx) {
 
 CharacterInstance& Enemy::Instance(Context& ctx) {
 	instance.MaxHealth = Health;
-	instance.CurrentHealth = CurrentHealth;
 	instance.PhysicalAttack = PhysicalAttack;
 	instance.SpecialAttack = SpecialAttack;
 	instance.PhysicalArmor = PhysicalArmor;

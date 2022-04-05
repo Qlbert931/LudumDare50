@@ -16,7 +16,6 @@ Sprite* getSprite(Context& ctx, RuneAttribute::Element element, const Component:
 
 Rune::Rune() {
 	Name = "Skip Turn";
-	Level = 1;
 	AdditionalLevel = 0;
 	Target = RuneAttribute::Target::Self;
 	Rarity = RuneAttribute::Rarity::Common;

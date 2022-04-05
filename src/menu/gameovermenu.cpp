@@ -6,11 +6,16 @@
 
 #include "gui/system.h"
 #include "gui/menus.h"
+#include "state.h"
+
+void gameOverHome(Context& ctx, Component& component) {
+	ctx.GameState->NextRoom();
+}
 
 Component* Menu::CreateGameOverMenu(Context& ctx) {
 	auto gameOverMenu = new VerticalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	*gameOverMenu += new Label(ctx, "Game Over", {.WidthScale = .5, .HeightScale = .2, .DefaultColor = WHITE});
-	*gameOverMenu += new Label(ctx, "1h 59m 28.49s", {.WidthScale = .95, .HeightScale = .3, .DefaultColor = WHITE});
+	*gameOverMenu += new Label(ctx, ctx.GameState->CurrentRun.ProgressTimeString(), {.WidthScale = .95, .HeightScale = .3, .DefaultColor = WHITE});
 
 	auto titleLevel = new HorizontalPanel (ctx, {.WidthScale = 1, .HeightScale =.15});
 	*gameOverMenu += titleLevel;
@@ -19,8 +24,8 @@ Component* Menu::CreateGameOverMenu(Context& ctx) {
 
 	auto numberLevel = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .15});
 	*gameOverMenu += numberLevel;
-	*numberLevel += new Label(ctx, "420", {.WidthScale = .3, .HeightScale = 1,.DefaultColor = WHITE});
-	*numberLevel += new Label(ctx, "69", {.WidthScale = .3, .HeightScale = 1,.DefaultColor = WHITE});
+	*numberLevel += new Label(ctx, TextFormat("%i", ctx.GameState->CurrentRun.EnemiesKilled), {.WidthScale = .3, .HeightScale = 1,.DefaultColor = WHITE});
+	*numberLevel += new Label(ctx, TextFormat("%i", ctx.GameState->CurrentRun.BossesKilled), {.WidthScale = .3, .HeightScale = 1,.DefaultColor = WHITE});
 
 	auto homeButtonRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .15});
 	*gameOverMenu += homeButtonRow;
@@ -35,7 +40,7 @@ Component* Menu::CreateGameOverMenu(Context& ctx) {
 	auto homeButtonContents = new HorizontalPanel(ctx, {.WidthScale = .9, .HeightScale = 1});
 	*homeButton += homeButtonContents;
 	auto homeButtonContentsSprite = new Sprite(ctx, SpriteName::Home, {.WidthScale = 0.4, .HeightScale = 1});
-	auto homeButtonContentsLabel = new Label(ctx, "HOME", {.WidthScale = 0.4, .HeightScale = 1, .DefaultColor = WHITE});
+	auto homeButtonContentsLabel = new Label(ctx, "HOME", {.WidthScale = 0.4, .HeightScale = 1, .DefaultColor = WHITE, .OnClick = gameOverHome});
 	*homeButtonContents += homeButtonContentsSprite;
 	*homeButtonContents += homeButtonContentsLabel;
 

@@ -125,7 +125,7 @@ bool BuffElemental::IsBuff(Context& ctx) { return true; }
 
 StatusEffectInstance* DebuffPoison::GetInstance(Context& ctx) { return nullptr; }
 void DebuffPoison::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
-	character.CurrentHealth -= poisonDmg;
+	character.Parent.CurrentHealth -= poisonDmg;
 }
 void DebuffPoison::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {}
 void DebuffPoison::PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {}
@@ -140,7 +140,7 @@ bool DebuffPoison::IsBuff(Context& ctx) { return false; }
 
 StatusEffectInstance* DebuffBleed::GetInstance(Context& ctx) { return nullptr; }
 void DebuffBleed::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {
-	character.CurrentHealth -= bleedDmg;
+	character.Parent.CurrentHealth -= bleedDmg;
 }
 void DebuffBleed::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {}
 void DebuffBleed::PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {}
@@ -180,7 +180,7 @@ bool DebuffSleep::IsBuff(Context& ctx) { return false; }
 StatusEffectInstance* DebuffSick::GetInstance(Context& ctx) { return nullptr; }
 void DebuffSick::PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) {}
 void DebuffSick::PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance,int damageDealt) {
-	character.CurrentHealth -= character.PhysicalAttack*sickDamage;
+	character.Parent.CurrentHealth -= character.PhysicalAttack*sickDamage;
 	if (instance.TurnsRemaining > 0) {
 		instance.TurnsRemaining -= 1;
 	}
