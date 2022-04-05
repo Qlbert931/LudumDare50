@@ -9,8 +9,7 @@
 #include "rune.h"
 #include "state.h"
 
-int tempProgressBarMax2 = 83;
-int tempProgressBarCurrent2 = 22;
+int maxExpBar2 = 10;
 
 void Menu::NewRuneMenuComponent::Update(Context& ctx) {
 	Component::Update(ctx);
@@ -65,8 +64,8 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 	auto panel = new Menu::NewRuneMenuComponent(ctx, {.WidthScale = 1, .HeightScale = 1});
 	auto timeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .05});
 	auto newRuneRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .39});
-	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &tempProgressBarMax2, &tempProgressBarCurrent2);
-	auto experienceBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.ExperienceBar}, &tempProgressBarMax2, &tempProgressBarCurrent2);
+	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &ctx.GameState->CurrentRun.PlayerCharacter.Health, &ctx.GameState->CurrentRun.PlayerCharacter.CurrentHealth);
+	auto experienceBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.ExperienceBar}, &maxExpBar2, &ctx.GameState->CurrentRun.PlayerCharacter.Experience);
 	auto runeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .49});
 	*panel += timeRow;
 	*panel += newRuneRow;

@@ -96,7 +96,7 @@ void Menu::LevelUpMenuComponent::Update(Context& ctx) {
 
 void confirmClicked(Context& ctx, Component& component) {
 	if (remainingPoints == 0) {
-		ctx.Menu.Set(Context::Menus::CombatMenu);
+		ctx.GameState->NextRoom();
 	}
 }
 
@@ -165,22 +165,22 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	*statPanel += fireResStat;
 	*fireResStat += new Label(ctx, "Fire Resistance", statLabelOptions);
 	*fireResStat += new Sprite(ctx, SpriteName::FireResistance, statSpriteOptions);
-	*fireResStat += new Label(ctx, "0%", statInputStepperOptions);
+	*fireResStat += new Label(ctx, TextFormat("%i%%", (int)(ctx.GameState->CurrentRun.PlayerCharacter.FireResistance(ctx) * 100.0)), statInputStepperOptions.WithHoverColor(Color{}));
 	auto waterResStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += waterResStat;
 	*waterResStat += new Label(ctx, "Water Resistance", statLabelOptions);
 	*waterResStat += new Sprite(ctx, SpriteName::WaterResistance, statSpriteOptions);
-	*waterResStat += new Label(ctx, "40%", statInputStepperOptions);
+	*waterResStat += new Label(ctx, TextFormat("%i%%", (int)(ctx.GameState->CurrentRun.PlayerCharacter.WaterResistance(ctx) * 100.0)), statInputStepperOptions.WithHoverColor(Color{}));
 	auto electricResStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += electricResStat;
 	*electricResStat += new Label(ctx, "Electric Resistance", statLabelOptions);
 	*electricResStat += new Sprite(ctx, SpriteName::ElectricResistance, statSpriteOptions);
-	*electricResStat += new Label(ctx, "-20%", statInputStepperOptions);
+	*electricResStat += new Label(ctx, TextFormat("%i%%", (int)(ctx.GameState->CurrentRun.PlayerCharacter.ElectricResistance(ctx) * 100.0)), statInputStepperOptions.WithHoverColor(Color{}));
 	auto windResStat = new HorizontalPanel(ctx, statPanelOptions);
 	*statPanel += windResStat;
 	*windResStat += new Label(ctx, "Wind Resistance", statLabelOptions);
 	*windResStat += new Sprite(ctx, SpriteName::WindResistance, statSpriteOptions);
-	*windResStat += new Label(ctx, "10%", statInputStepperOptions);
+	*windResStat += new Label(ctx, TextFormat("%i%%", (int)(ctx.GameState->CurrentRun.PlayerCharacter.WindResistance(ctx) * 100.0)), statInputStepperOptions.WithHoverColor(Color{}));
 
 	auto runePanel = new VerticalPanel(ctx, {.WidthScale = .5, .HeightScale = 1});
 	*statsRow += runePanel;

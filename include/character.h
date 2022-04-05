@@ -17,7 +17,6 @@ struct CharacterInstance {
 
 	Character& Parent;
 	int MaxHealth = 0;
-	int CurrentHealth = 0;
 	int PhysicalAttack = 0;
 	int SpecialAttack = 0;
 	int PhysicalArmor = 0;

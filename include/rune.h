@@ -73,7 +73,6 @@ public:
 	double WindResistance(Context& ctx);
 
 	std::string Name;
-	double Level;
 	int AdditionalLevel;
 	RuneAttribute::Target Target;
 	RuneAttribute::Rarity Rarity;

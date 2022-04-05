@@ -9,6 +9,9 @@
 #include "raylib/raylib.h"
 #include "vector"
 
+// GetRandomDouble returns a double between 0.0 and 1.0 inclusive.
+double GetRandomDouble();
+
 class Component;
 class State;
 

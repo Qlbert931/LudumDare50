@@ -11,15 +11,16 @@
 #include "enemy.h"
 #include "statuseffect.h"
 
-int tempProgressBar = 190;
-int tempProgressBarCurrent = 100;
+int maxExperienceBar = 10;
 
 void Menu::CombatMenuComponent::Update(Context& ctx) {
 	Component::Update(ctx);
 	auto ProgressLabel = (Label*)(this->Child(0)->Child(0));
 	auto ElapsedLabel = (Label*)(this->Child(0)->Child(2));
+	auto HealthLabel = (Label*)(this->Child(2)->Child(0)->Child(0));
 	ProgressLabel->SetText(ctx, TextFormat("Progress: %s", ctx.GameState->CurrentRun.ProgressTimeString().c_str()));
 	ElapsedLabel->SetText(ctx, TextFormat("Current: %s", ctx.GameState->CurrentRun.ElapsedTimeString().c_str()));
+	HealthLabel->SetText(ctx, TextFormat("Health %i/%i", ctx.GameState->CurrentRun.PlayerCharacter.CurrentHealth, ctx.GameState->CurrentRun.PlayerCharacter.Health));
 }
 
 void attackingRune0(Context& ctx, Component& component) {
@@ -50,8 +51,8 @@ Component* Menu::CreateCombatMenu(Context& ctx) {
 	auto panel = new Menu::CombatMenuComponent(ctx, {.WidthScale = 1, .HeightScale = 1});
 	auto timeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .05});
 	auto enemyRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .39});
-	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &tempProgressBar, &tempProgressBarCurrent);
-	auto experienceBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.ExperienceBar}, &tempProgressBar, &tempProgressBarCurrent);
+	auto healthBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.HealthBar}, &ctx.GameState->CurrentRun.PlayerCharacter.Health, &ctx.GameState->CurrentRun.PlayerCharacter.CurrentHealth);
+	auto experienceBar = new ProgressBar(ctx, {.WidthScale = .995, .HeightScale = .033, .DefaultColor = ctx.Colors.ExperienceBar}, &maxExperienceBar, &ctx.GameState->CurrentRun.PlayerCharacter.Experience);
 	auto runeRow = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = .49});
 	*panel += timeRow;
 	*panel += enemyRow;
@@ -96,13 +97,13 @@ Component* Menu::CreateCombatMenu(Context& ctx) {
 	// Experience Bar
 	auto innerHealthBar = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	*healthBar += innerHealthBar;
-	*innerHealthBar += new Label(ctx, "Health 22/70", {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
+	*innerHealthBar += new Label(ctx, TextFormat("Health %i/%i", ctx.GameState->CurrentRun.PlayerCharacter.CurrentHealth, ctx.GameState->CurrentRun.PlayerCharacter.Health), {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
 	*innerHealthBar += new HorizontalPanel(ctx, {.WidthScale = .85, .HeightScale = 1});
 
 	// Experience Bar
 	auto innerEXPBar = new HorizontalPanel(ctx, {.WidthScale = 1, .HeightScale = 1});
 	*experienceBar += innerEXPBar;
-	*innerEXPBar += new Label(ctx, "Level 22", {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
+	*innerEXPBar += new Label(ctx, TextFormat("Level %i", ctx.GameState->CurrentRun.PlayerCharacter.Level(ctx)), {.WidthScale = .1, .HeightScale = .95, .DefaultColor = WHITE});
 	*innerEXPBar += new HorizontalPanel(ctx, {.WidthScale = .85, .HeightScale = 1});
 
 	// Rune Row
