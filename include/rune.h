@@ -32,7 +32,7 @@ namespace RuneAttribute {
 	};
 
 	enum Element {
-		None = 0,
+		NoElement = 0,
 		Fire = 1,
 		Water = 2,
 		Electric = 3,
@@ -41,23 +41,16 @@ namespace RuneAttribute {
 		Pure = 6
 	};
 
-	enum BuffDebuff {
-		LifeSteal = 0,
-		Lucky = 1,
-		Adrenaline = 2,
-		Elemental = 3,
-		Poison = 4,
-		Bleed = 5,
-		Sleep = 6,
-		Sick = 7,
-		None1 = 8,
-		None2 = 9,
-		None3 = 10,
-		None4 = 11,
-		None5 = 12,
-		None6 = 13,
-		None7 = 14,
-		None8 = 15
+	enum StatusEffect {
+		NoEffect = 0,
+		Lifesteal = 1,
+		Lucky = 2,
+		Adrenaline = 3,
+		Elemental = 4,
+		Poison = 5,
+		Bleed = 6,
+		Sleep = 7,
+		Sick = 8,
 	};
 }
 
@@ -86,7 +79,6 @@ public:
 	RuneAttribute::Rarity Rarity;
 	RuneAttribute::AttackType AttackType;
 	RuneAttribute::Element Element;
-	RuneAttribute::BuffDebuff BDuff;
 	double FlatDamage;
 	std::vector<StatusEffect*> Buffs;
 	std::vector<StatusEffect*> Debuffs;

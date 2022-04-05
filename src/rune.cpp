@@ -18,11 +18,10 @@ Rune::Rune() {
 	Name = "Skip Turn";
 	Level = 1;
 	AdditionalLevel = 0;
-	BDuff = RuneAttribute::BuffDebuff::LifeSteal;
 	Target = RuneAttribute::Target::Self;
 	Rarity = RuneAttribute::Rarity::Common;
 	AttackType = RuneAttribute::AttackType::Special;
-	Element = RuneAttribute::Element::None;
+	Element = RuneAttribute::Element::NoElement;
 	FlatDamage = 0;
 	//Buffs
 	//Debuffs
@@ -95,9 +94,12 @@ Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
 		bool leave = false;
 		for (int i = 0; i < 3; i++) {
 			if (runePoints - bDCost >= 0 || leave) { break; }
-			BDuff = (RuneAttribute::BuffDebuff) GetRandomValue(0, 15);
+			auto BDuff = (RuneAttribute::StatusEffect)GetRandomValue(0, 15);
+			if (BDuff == RuneAttribute::StatusEffect::NoEffect || (int)BDuff > 8) {
+				break;
+			}
 			switch (BDuff) {
-				case RuneAttribute::LifeSteal:
+				case RuneAttribute::Lifesteal:
 					Buffs.push_back(LifeSteal);
 					runePoints -= bDCost;
 					break;
@@ -129,26 +131,6 @@ Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
 					Debuffs.push_back(Sick);
 					runePoints -= bDCost;
 					break;
-				case RuneAttribute::None1:
-					break;
-				case RuneAttribute::None2:
-					break;
-				case RuneAttribute::None3:
-					break;
-				case RuneAttribute::None4:
-					break;
-				case RuneAttribute::None5:
-					break;
-				case RuneAttribute::None6:
-					break;
-				case RuneAttribute::None7:
-					std::cout << "crash" << std::endl;
-					leave = true;
-					break;
-				case RuneAttribute::None8:
-					std::cout << "crash" << std::endl;
-					leave = true;
-					break;
 			}
 		}
 
@@ -156,20 +138,23 @@ Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
 		CritChance = critDet;
 		CritMultiplier = (.5 * runePoints) - critDet;
 		runePoints -= critDet;
-	}
-	else {
+	} else {
 		auto critDet = (double)GetRandomValue(1, .5 * runePoints);
 		CritChance = critDet;
 		CritMultiplier = (.5 * runePoints) - critDet;
 		runePoints -= critDet;
-
 
 		bool leave = false;
 		for (int i = 0; i < 3; i++) {
-			if (runePoints - bDCost >= 0 || leave) { break; }
-			BDuff = (RuneAttribute::BuffDebuff) GetRandomValue(0, 15);
+			if (runePoints - bDCost >= 0 || leave) {
+				break;
+			}
+			auto BDuff = (RuneAttribute::StatusEffect)GetRandomValue(0, 15);
+			if (BDuff == RuneAttribute::StatusEffect::NoEffect || (int)BDuff > 8) {
+				break;
+			}
 			switch (BDuff) {
-				case RuneAttribute::LifeSteal:
+				case RuneAttribute::Lifesteal:
 					Buffs.push_back(LifeSteal);
 					runePoints -= bDCost;
 					break;
@@ -201,31 +186,11 @@ Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
 					Debuffs.push_back(Sick);
 					runePoints -= bDCost;
 					break;
-				case RuneAttribute::None1:
-					break;
-				case RuneAttribute::None2:
-					break;
-				case RuneAttribute::None3:
-					break;
-				case RuneAttribute::None4:
-					break;
-				case RuneAttribute::None5:
-					break;
-				case RuneAttribute::None6:
-					break;
-				case RuneAttribute::None7:
-					std::cout << "crash" << std::endl;
-					leave = true;
-					break;
-				case RuneAttribute::None8:
-					std::cout << "crash" << std::endl;
-					leave = true;
-					break;
 			}
 		}
 	}
 
-	FlatDamage = (runePoints * 75) + (75* ctx.GameState->CurrentRun.ElapsedTime);
+	FlatDamage = (runePoints * 75) + (75 * ctx.GameState->CurrentRun.ElapsedTime);
 }
 
 Rune::~Rune() {
@@ -277,7 +242,7 @@ std::string Rune::EffectText(Context& ctx) {
 				break;
 		}
 		switch (Element) {
-			case RuneAttribute::None:
+			case RuneAttribute::NoElement:
 				str += " affected by armor";
 				break;
 			case RuneAttribute::Fire:
@@ -371,7 +336,7 @@ Component* Rune::GenerateComponent(Context& ctx, const Component::Options& optio
 
 double Rune::FireResistance(Context& ctx) {
 	switch (Element) {
-		case RuneAttribute::None:
+		case RuneAttribute::NoElement:
 			switch (Rarity) {
 				case RuneAttribute::Common:
 					return 0;
@@ -458,7 +423,7 @@ double Rune::FireResistance(Context& ctx) {
 
 double Rune::WaterResistance(Context& ctx) {
 	switch (Element) {
-		case RuneAttribute::None:
+		case RuneAttribute::NoElement:
 			switch (Rarity) {
 				case RuneAttribute::Common:
 					return 0;
@@ -545,7 +510,7 @@ double Rune::WaterResistance(Context& ctx) {
 
 double Rune::ElectricResistance(Context& ctx) {
 	switch (Element) {
-		case RuneAttribute::None:
+		case RuneAttribute::NoElement:
 			switch (Rarity) {
 				case RuneAttribute::Common:
 					return 0;
@@ -632,7 +597,7 @@ double Rune::ElectricResistance(Context& ctx) {
 
 double Rune::WindResistance(Context& ctx) {
 	switch (Element) {
-		case RuneAttribute::None:
+		case RuneAttribute::NoElement:
 			switch (Rarity) {
 				case RuneAttribute::Common:
 					return 0;
@@ -745,7 +710,7 @@ Sprite* getSprite(Context& ctx, RuneAttribute::AttackType attackType, const Comp
 
 Sprite* getSprite(Context& ctx, RuneAttribute::Element element, const Component::Options& options) {
 	switch (element) {
-		case RuneAttribute::None:
+		case RuneAttribute::NoElement:
 			return new Sprite(ctx, SpriteName::NoneRune, options);
 		case RuneAttribute::Fire:
 			return new Sprite(ctx, SpriteName::FireRune, options);

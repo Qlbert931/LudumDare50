@@ -9,7 +9,6 @@
 #include "state.h"
 
 void mainMenuPlayPressed(Context& ctx, Component& component) {
-	ctx.GameState->NewGame();
 	ctx.GameState->NextRoom();
 }
 
