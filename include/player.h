@@ -18,6 +18,7 @@ public:
 	double ElectricResistance(Context& ctx) override;
 	double WindResistance(Context& ctx) override;
 	CharacterInstance& Instance(Context& ctx) override;
+	void LevelUp(Context& ctx) { level += 1; }
 
 	int Experience;
 	int Evasion;

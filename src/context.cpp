@@ -25,7 +25,6 @@ Context::~Context() {
 
 void Context::Initialize() {
 	this->Menu.initialize(*this);
-	this->GameState->NewGame();
 }
 
 void Context::Update() {
