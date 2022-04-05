@@ -7,13 +7,14 @@
 #ifndef STATUSEFFECT_H
 #define STATUSEFFECT_H
 #include "character.h"
+#include "state.h"
 
 class StatusEffectInstance;
 
 class StatusEffect {
 public:
 	virtual ~StatusEffect() {}
-	virtual StatusEffectInstance* GetInstance(Context& ctx) = 0;
+	virtual StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) = 0;
 	virtual void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) = 0;
 	virtual void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) = 0;
 	virtual void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) = 0;
@@ -25,6 +26,7 @@ public:
 
 class StatusEffectInstance {
 public:
+	StatusEffectInstance(StatusEffect& status, Character& target, Character& caster) : StatusEffect(status), Target(target), Caster(caster) {};
 	void PreAttack(Context& ctx, CharacterInstance& character) { StatusEffect.PreAttack(ctx, character, *this); };
 	void PostAttack(Context& ctx, CharacterInstance& character, int damageDealt) { StatusEffect.PostAttack(ctx, character, *this, damageDealt); };
 	void PreHit(Context& ctx, CharacterInstance& character) { StatusEffect.PreHit(ctx, character, *this); };
@@ -37,12 +39,17 @@ public:
 	StatusEffect& StatusEffect;
 	Character& Target;
 	Character& Caster;
-	int TurnsRemaining;
+	int TurnsRemaining{};
 };
 
 class BuffLifesteal : public StatusEffect {
 public:
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+	BuffLifesteal(double strength) {
+		TurnCounter = 0;
+		Strength = strength/2;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -56,7 +63,13 @@ public:
 };
 
 class BuffLucky : public StatusEffect {
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+public:
+	BuffLucky(double critChance){
+		TurnCounter = 0;
+		CritChance = critChance; //100;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -66,11 +79,17 @@ class BuffLucky : public StatusEffect {
 	bool IsBuff(Context& ctx) override;
 
 	int TurnCounter;
-	double CritChance = 100;
+	double CritChance;
 };
 
 class BuffAdrenaline : public StatusEffect {
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+public:
+	BuffAdrenaline (double attackBoost) {
+		TurnCounter = 0;
+		AttackBoost = attackBoost/2;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -80,11 +99,18 @@ class BuffAdrenaline : public StatusEffect {
 	bool IsBuff(Context& ctx) override;
 
 	int TurnCounter;
-	double AttackBoost = 1.5;
+	double AttackBoost;
 };
 
 class BuffElemental : public StatusEffect {
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+public:
+	BuffElemental( double resistanceBoost) {
+		TurnCounter = 0;
+		chosenType = 0;
+		ResistanceBoost = resistanceBoost;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -95,11 +121,17 @@ class BuffElemental : public StatusEffect {
 
 	int TurnCounter;
 	int chosenType;
-	double resistanceBoost = 100;
+	double ResistanceBoost;
 };
 
 class DebuffPoison : public StatusEffect {
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+public:
+	DebuffPoison(double poisonDmg) {
+		TurnCounter = 0;
+		PoisonDmg = 10;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -109,11 +141,17 @@ class DebuffPoison : public StatusEffect {
 	bool IsBuff(Context& ctx) override;
 
 	int TurnCounter;
-	int poisonDmg = 10;
+	int PoisonDmg;
 };
 
 class DebuffBleed : public StatusEffect {
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+public:
+	DebuffBleed(double bleedDmg) {
+		TurnCounter = 0;
+		BleedDmg = bleedDmg;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -123,11 +161,17 @@ class DebuffBleed : public StatusEffect {
 	bool IsBuff(Context& ctx) override;
 
 	int TurnCounter;
-	int bleedDmg = 25;
+	int BleedDmg;
 };
 
 class DebuffSleep : public StatusEffect {
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+public:
+	DebuffSleep() {
+		TurnCounter = 0;
+		asleep = false;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -137,11 +181,17 @@ class DebuffSleep : public StatusEffect {
 	bool IsBuff(Context& ctx) override;
 
 	int TurnCounter;
-	bool asleep = false;
+	bool asleep;
 };
 
 class DebuffSick : public StatusEffect {
-	StatusEffectInstance* GetInstance(Context& ctx) override;
+public:
+	DebuffSick(double sickMult) {
+		TurnCounter = 0;
+		SickMult = sickMult;
+	};
+
+	StatusEffectInstance* GetInstance(Context& ctx, Character& target, Character& caster) override;
 	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
 	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
 	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
@@ -151,7 +201,7 @@ class DebuffSick : public StatusEffect {
 	bool IsBuff(Context& ctx) override;
 
 	int TurnCounter;
-	double sickDamage = .15;
+	double SickMult = .15;
 };
 
 #endif //STATUSEFFECT_H
