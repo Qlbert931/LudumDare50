@@ -54,13 +54,13 @@ Component* Menu::CreateRuneMenu(Context& ctx) {
 		.HeightScale = .8,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover};
-	auto electricRuneBack = Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	auto fireRuneBack = Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	auto noneRuneBack = Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	auto electricRuneBack = Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	auto fireRuneBack = Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	auto noneRuneBack = Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
 
-	auto pureRuneBack = Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	auto waterRuneBack = Rune(ctx, true).GenerateComponent(ctx, runeOptions);
-	auto windRuneBack = Rune(ctx, true).GenerateComponent(ctx, runeOptions);
+	auto pureRuneBack = Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	auto waterRuneBack = Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
+	auto windRuneBack = Rune(ctx, RuneAttribute::Common).GenerateComponent(ctx, runeOptions);
 
 	*container1 += electricRuneBack;
 	*container1 += fireRuneBack;

@@ -49,9 +49,109 @@ public:
 	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
 	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
 	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
 
 	int TurnCounter;
 	double Strength;
+};
+
+class BuffLucky : public StatusEffect {
+	StatusEffectInstance* GetInstance(Context& ctx) override;
+	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
+	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
+	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
+	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
+
+	int TurnCounter;
+	double CritChance = 100;
+};
+
+class BuffAdrenaline : public StatusEffect {
+	StatusEffectInstance* GetInstance(Context& ctx) override;
+	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
+	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
+	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
+	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
+
+	int TurnCounter;
+	double AttackBoost = 1.5;
+};
+
+class BuffElemental : public StatusEffect {
+	StatusEffectInstance* GetInstance(Context& ctx) override;
+	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
+	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
+	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
+	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
+
+	int TurnCounter;
+	int chosenType;
+	double resistanceBoost = 100;
+};
+
+class DebuffPoison : public StatusEffect {
+	StatusEffectInstance* GetInstance(Context& ctx) override;
+	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
+	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
+	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
+	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
+
+	int TurnCounter;
+	int poisonDmg = 10;
+};
+
+class DebuffBleed : public StatusEffect {
+	StatusEffectInstance* GetInstance(Context& ctx) override;
+	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
+	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
+	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
+	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
+
+	int TurnCounter;
+	int bleedDmg = 25;
+};
+
+class DebuffSleep : public StatusEffect {
+	StatusEffectInstance* GetInstance(Context& ctx) override;
+	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
+	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
+	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
+	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
+
+	int TurnCounter;
+	bool asleep = false;
+};
+
+class DebuffSick : public StatusEffect {
+	StatusEffectInstance* GetInstance(Context& ctx) override;
+	void PreAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostAttack(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageDealt) override;
+	void PreHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance) override;
+	void PostHit(Context& ctx, CharacterInstance& character, StatusEffectInstance& instance, int damageReceived) override;
+	Sprite* GetSprite(Context& ctx, const Component::Options& options) override;
+	std::string Description(Context& ctx) override;
+	bool IsBuff(Context& ctx) override;
+
+	int TurnCounter;
+	double sickDamage = .15;
 };
 
 #endif //STATUSEFFECT_H

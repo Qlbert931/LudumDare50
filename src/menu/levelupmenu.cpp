@@ -182,7 +182,6 @@ Component* Menu::CreateLevelUpMenu(Context& ctx) {
 	*windResStat += new Sprite(ctx, SpriteName::WindResistance, statSpriteOptions);
 	*windResStat += new Label(ctx, "10%", statInputStepperOptions);
 
-	// Runes Column
 	auto runePanel = new VerticalPanel(ctx, {.WidthScale = .5, .HeightScale = 1});
 	*statsRow += runePanel;
 

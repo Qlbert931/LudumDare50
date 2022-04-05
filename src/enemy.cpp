@@ -10,21 +10,31 @@
 
 Enemy::Enemy(Context& ctx, double currentTime, bool isBoss) {
 	//TODO: generate enemy stats
+	double bossMult = 1;
+
 	Name = "Test Name";
 	spriteName = SpriteName::Dragon;
 	IsBoss = isBoss;
-	Health = 10;
+	if (isBoss) { bossMult = 2.0; }
+
+	Health = 100 * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
 	CurrentHealth = 5;
-	PhysicalAttack = 222;
-	SpecialAttack = 333;
-	PhysicalArmor = 555;
-	SpecialArmor = 444;
-	Speed = 111;
+
+	double attackBalancer = GetRandomValue(0, 1) * bossMult;
+
+	PhysicalAttack = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult * attackBalancer;
+	SpecialAttack = (attackBalancer*100 - PhysicalAttack) * bossMult * ctx.GameState->CurrentRun.ElapsedTime;
+
+	double armorBalancer = GetRandomValue(0, 1) * bossMult;
+
+	PhysicalArmor = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult * armorBalancer;
+	SpecialArmor = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult * armorBalancer;;
+	Speed = 75 * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
 	EncounterTime = currentTime;
-	fireResistance = .12;
-	waterResistance = -.7;
-	electricResistance = 1.1;
-	windResistance = .4;
+	fireResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
+	waterResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
+	electricResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
+	windResistance = GetRandomValue(30, 50) * ctx.GameState->CurrentRun.ElapsedTime * bossMult;
 }
 
 Enemy::~Enemy() {

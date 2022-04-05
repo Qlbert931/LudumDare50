@@ -83,7 +83,7 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 	// New Rune Row
 	auto runeButtons = Component::Options{.WidthScale = .2, .HeightScale = .2, .DefaultColor = ctx.Colors.Button, .HoverColor = ctx.Colors.ButtonHover};
 	*newRuneRow += (new Button(ctx, runeButtons))->AddChild(new Label(ctx, "Cancel", {.WidthScale = .8, .HeightScale = .8, .DefaultColor = WHITE, .OnClick = newRuneCancelClick}));
-	*newRuneRow += Rune(ctx, true).GenerateComponent(ctx, {
+	*newRuneRow += ctx.GameState->CurrentRun.AddingRune->GenerateComponent(ctx, {
 		.WidthScale = .5,
 		.HeightScale = .7,
 		.DefaultColor = ctx.Colors.Button});
@@ -113,6 +113,7 @@ Component* Menu::CreateNewRuneMenu(Context& ctx) {
 		.HeightScale = .48,
 		.DefaultColor = ctx.Colors.Button,
 		.HoverColor = ctx.Colors.ButtonHover};
+
 	auto runeOptions0 = runeOptions.WithOnClick(replacingRune0);
 	auto runeOptions1 = runeOptions.WithOnClick(replacingRune1);
 	auto runeOptions2 = runeOptions.WithOnClick(replacingRune2);

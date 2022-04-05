@@ -6,6 +6,9 @@
 
 #include "rune.h"
 #include "statuseffect.h"
+#include "context.h"
+#include "state.h"
+#include <iostream>
 
 Sprite* getSprite(Context& ctx, RuneAttribute::Target target, const Component::Options& options);
 Sprite* getSprite(Context& ctx, RuneAttribute::AttackType attackType, const Component::Options& options);
@@ -15,6 +18,7 @@ Rune::Rune() {
 	Name = "Skip Turn";
 	Level = 1;
 	AdditionalLevel = 0;
+	BDuff = RuneAttribute::BuffDebuff::LifeSteal;
 	Target = RuneAttribute::Target::Self;
 	Rarity = RuneAttribute::Rarity::Common;
 	AttackType = RuneAttribute::AttackType::Special;
@@ -26,19 +30,202 @@ Rune::Rune() {
 	CritMultiplier = 1;
 }
 
-Rune::Rune(Context& ctx, bool forPlayer) {
+Rune::Rune(Context& ctx, RuneAttribute::Rarity rarity) {
+	// TODO: Generate Name
 	Name = "RuneNameGoesHere";
-	Level = GetRandomValue(0, 50);
+
+	Rarity = rarity;
+	double runePoints = 5.0 + 5* ctx.GameState->CurrentRun.ElapsedTime;
+
+	switch(rarity) {
+		case RuneAttribute::Common:
+			runePoints *= 1;
+			break;
+		case RuneAttribute::Uncommon:
+			runePoints *= 1.125;
+			break;
+		case RuneAttribute::Rare:
+			runePoints *= 1.25;
+			break;
+		case RuneAttribute::Epic:
+			runePoints *= 1.5;
+			break;
+		case RuneAttribute::Legendary:
+			runePoints *= 2;
+			break;
+	}
+
+	double bDCost = 1;
+
 	AdditionalLevel = GetRandomValue(0, 5);
 	Target = (RuneAttribute::Target)GetRandomValue(0, 4);
-	Rarity = (RuneAttribute::Rarity)GetRandomValue(0, 4);
+	switch (Target) {
+		case RuneAttribute::SingleEnemy:
+			bDCost = 1 * (1 + ctx.GameState->CurrentRun.ElapsedTime);
+			break;
+		case RuneAttribute::AllEnemies:
+			bDCost = 4 * (1 + ctx.GameState->CurrentRun.ElapsedTime);
+			break;
+		case RuneAttribute::Self:
+			bDCost = 1.5 * (1 + ctx.GameState->CurrentRun.ElapsedTime);
+			break;
+		case RuneAttribute::SelfAndSingleEnemy:
+			bDCost = 2.5 * (1 + ctx.GameState->CurrentRun.ElapsedTime);
+			break;
+		case RuneAttribute::SelfAndAllEnemies:
+			bDCost = 3 * (1 + ctx.GameState->CurrentRun.ElapsedTime);
+			break;
+	}
+
 	AttackType = (RuneAttribute::AttackType)GetRandomValue(0, 1);
 	Element = (RuneAttribute::Element)GetRandomValue(0, 6);
-	FlatDamage = GetRandomValue(0, 500);
-	//Buffs
-	//Debuffs
-	CritChance = (double)GetRandomValue(10, 200) / 100.0;
-	CritMultiplier = (double)GetRandomValue(110, 400) / 100.0;
+
+	StatusEffect* LifeSteal = new BuffLifesteal();
+	StatusEffect* Lucky = new BuffLucky();
+	StatusEffect* Adrenaline = new BuffAdrenaline();
+	StatusEffect* Elemental = new BuffElemental();
+	StatusEffect* Poison = new DebuffPoison();
+	StatusEffect* Bleed = new DebuffBleed();
+	StatusEffect* Sleep = new DebuffSleep();
+	StatusEffect* Sick = new DebuffSick();
+
+	int path = GetRandomValue(0,1);
+	if (path == 0) {
+		// Buffs/Debuffs first
+		bool leave = false;
+		for (int i = 0; i < 3; i++) {
+			if (runePoints - bDCost >= 0 || leave) { break; }
+			BDuff = (RuneAttribute::BuffDebuff) GetRandomValue(0, 15);
+			switch (BDuff) {
+				case RuneAttribute::LifeSteal:
+					Buffs.push_back(LifeSteal);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Lucky:
+					Buffs.push_back(Lucky);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Adrenaline:
+					Buffs.push_back(Adrenaline);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Elemental:
+					Buffs.push_back(Elemental);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Poison:
+					Debuffs.push_back(Poison);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Bleed:
+					Debuffs.push_back(Bleed);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Sleep:
+					Debuffs.push_back(Sleep);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Sick:
+					Debuffs.push_back(Sick);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::None1:
+					break;
+				case RuneAttribute::None2:
+					break;
+				case RuneAttribute::None3:
+					break;
+				case RuneAttribute::None4:
+					break;
+				case RuneAttribute::None5:
+					break;
+				case RuneAttribute::None6:
+					break;
+				case RuneAttribute::None7:
+					std::cout << "crash" << std::endl;
+					leave = true;
+					break;
+				case RuneAttribute::None8:
+					std::cout << "crash" << std::endl;
+					leave = true;
+					break;
+			}
+		}
+
+		auto critDet = (double)GetRandomValue(1, .5 * runePoints);
+		CritChance = critDet;
+		CritMultiplier = (.5 * runePoints) - critDet;
+		runePoints -= critDet;
+	}
+	else {
+		auto critDet = (double)GetRandomValue(1, .5 * runePoints);
+		CritChance = critDet;
+		CritMultiplier = (.5 * runePoints) - critDet;
+		runePoints -= critDet;
+
+
+		bool leave = false;
+		for (int i = 0; i < 3; i++) {
+			if (runePoints - bDCost >= 0 || leave) { break; }
+			BDuff = (RuneAttribute::BuffDebuff) GetRandomValue(0, 15);
+			switch (BDuff) {
+				case RuneAttribute::LifeSteal:
+					Buffs.push_back(LifeSteal);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Lucky:
+					Buffs.push_back(Lucky);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Adrenaline:
+					Buffs.push_back(Adrenaline);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Elemental:
+					Buffs.push_back(Elemental);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Poison:
+					Debuffs.push_back(Poison);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Bleed:
+					Debuffs.push_back(Bleed);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Sleep:
+					Debuffs.push_back(Sleep);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::Sick:
+					Debuffs.push_back(Sick);
+					runePoints -= bDCost;
+					break;
+				case RuneAttribute::None1:
+					break;
+				case RuneAttribute::None2:
+					break;
+				case RuneAttribute::None3:
+					break;
+				case RuneAttribute::None4:
+					break;
+				case RuneAttribute::None5:
+					break;
+				case RuneAttribute::None6:
+					break;
+				case RuneAttribute::None7:
+					std::cout << "crash" << std::endl;
+					leave = true;
+					break;
+				case RuneAttribute::None8:
+					std::cout << "crash" << std::endl;
+					leave = true;
+					break;
+			}
+		}
+	}
+
+	FlatDamage = (runePoints * 75) + (75* ctx.GameState->CurrentRun.ElapsedTime);
 }
 
 Rune::~Rune() {

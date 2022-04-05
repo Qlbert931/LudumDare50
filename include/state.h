@@ -32,7 +32,7 @@ public:
 		double ProgressTime = 0;
 		double ElapsedTime = 0;
 		Player PlayerCharacter;
-		Rune* AddingRune = nullptr;
+		Rune* AddingRune = new Rune();
 		int ReplacingIndex;
 
 		std::string ProgressTimeString() {

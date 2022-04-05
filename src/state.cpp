@@ -61,8 +61,7 @@ void State::NextRoom() {
 				//TODO: will these panic if I delete the old rune?
 				if (probability <= ChanceProgress.NextRuneLegendary) {
 					ChanceProgress.NextRuneLegendary = 0;
-					//TODO: add proper rune
-					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, true);
+					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, RuneAttribute::Legendary);
 					ctx.Menu.ReloadNewRuneMenu(ctx);
 					ctx.Menu.Set(Context::Menus::NewRuneMenu);
 					return;
@@ -70,8 +69,7 @@ void State::NextRoom() {
 				ChanceProgress.NextRuneEpic += Chances::RarityEpic;
 				if (probability <= ChanceProgress.NextRuneEpic) {
 					ChanceProgress.NextRuneEpic = 0;
-					//TODO: add proper rune
-					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, true);
+					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, RuneAttribute::Epic);
 					ctx.Menu.ReloadNewRuneMenu(ctx);
 					ctx.Menu.Set(Context::Menus::NewRuneMenu);
 					return;
@@ -79,8 +77,7 @@ void State::NextRoom() {
 				ChanceProgress.NextRuneRare += Chances::RarityRare;
 				if (probability <= ChanceProgress.NextRuneRare) {
 					ChanceProgress.NextRuneRare = 0;
-					//TODO: add proper rune
-					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, true);
+					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, RuneAttribute::Rare);
 					ctx.Menu.ReloadNewRuneMenu(ctx);
 					ctx.Menu.Set(Context::Menus::NewRuneMenu);
 					return;
@@ -88,14 +85,12 @@ void State::NextRoom() {
 				ChanceProgress.NextRuneUncommon += Chances::RarityUncommon;
 				if (probability <= ChanceProgress.NextRuneUncommon) {
 					ChanceProgress.NextRuneUncommon = 0;
-					//TODO: add proper rune
-					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, true);
+					ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, RuneAttribute::Uncommon);
 					ctx.Menu.ReloadNewRuneMenu(ctx);
 					ctx.Menu.Set(Context::Menus::NewRuneMenu);
 					return;
 				}
-				//TODO: add proper rune
-				ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, true);
+				ctx.GameState->CurrentRun.AddingRune = new Rune(ctx, RuneAttribute::Common);
 				ctx.Menu.ReloadNewRuneMenu(ctx);
 				ctx.Menu.Set(Context::Menus::NewRuneMenu);
 				return;
